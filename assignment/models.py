@@ -45,6 +45,9 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this book."""
+        return reverse('course-detail', args=[str(self.id)])    
 
 class Assignment(models.Model):
     number = models.IntegerField()
