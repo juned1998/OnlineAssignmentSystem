@@ -1,0 +1,38 @@
+{% extends "index_base.html" %}
+{% block title %} Assignment : Home {%endblock%}
+{% block content %}
+<div class="">
+
+  <div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="Qbox col-md-6 mx-3 my-3">
+      <form>
+      <textarea name="name" rows="1" cols="60" style = "resize : none;  padding:1px;" placeholder="Ask Question.." ></textarea>
+      <button type="button" class="btn btn-primary searchButton" >Search</button>
+      </form>
+    </div>
+  </div>
+  {% if question_list %}
+
+    {% for question in question_list %}
+    <div class="row">
+      <div class = "col-md-3">
+      </div>
+      <div class = "Qbox col-md-6 my-3 mx-3 " style = "border : solid 1px #ddd">
+        <h6 class="mx-3 my-3" >{{question.assignment.course}} | Assignment no.{{question.assignment.number}}</h6>
+        <h3> {{question.title}}</h3>
+
+        <a href="{{ question.get_absolute_url }}" class="mx-3 my-1 viewAnswers" > view all {{ question.answer.all.count }} answers</a>
+      </div>
+      <div class = "col-md-3">
+      </div>
+    </div>
+    {% endfor %}
+
+  {% else %}
+    <p>There are no questions.</p>
+  {% endif %}
+
+
+{% endblock %}
