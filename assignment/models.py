@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 # Create your models here.
+#if hasattr(self, 'student'):
+
+
 class StudyYear(models.Model):
     year = models.CharField(max_length = 50 , help_text = "Enter in this format First Year , Second Year, etc.")
 
@@ -24,6 +27,7 @@ class Branch(models.Model):
 class Faculty(models.Model):
     user = models.OneToOneField(User, on_delete =models.CASCADE)
     branch = models.ForeignKey(Branch , on_delete = models.SET_NULL,null=True)
+    code = models.CharField(max_length=30 ,blank = True, unique = True)
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
 
@@ -38,8 +42,8 @@ class Student(models.Model):
 
 class Course(models.Model):
     name = models.CharField(max_length = 50)
-    branch = models.ManyToManyField(Branch)
-    faculty = models.ManyToManyField(Faculty)
+    branch = models.ForeignKey(Branch,on_delete = models.SET_NULL,blank=True,null=True)
+    faculty = models.ForeignKey(Faculty ,on_delete = models.SET_NULL,blank=True,null=True)
     year = models.ForeignKey(StudyYear ,on_delete = models.SET_NULL,blank=True,null=True)
     semester = models.ForeignKey(Semester ,on_delete = models.SET_NULL,blank=True,null=True )
 
@@ -47,7 +51,7 @@ class Course(models.Model):
         return self.name
     def get_absolute_url(self):
         """Returns the url to access a detail record for this book."""
-        return reverse('course-detail', args=[str(self.id)])    
+        return reverse('course-detail', args=[str(self.id)])
 
 class Assignment(models.Model):
     number = models.IntegerField()

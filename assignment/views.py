@@ -1,14 +1,16 @@
 from django.shortcuts import render, redirect
-from .forms import CourseForm
 from .models import Student, Faculty, Assignment, Question , Answer , StudyYear, Semester , Branch , Course
 from django.contrib.auth.decorators import login_required
+from .forms import ExtendedUserCreationForm,StudentSignUpForm,FacultySignUpForm
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 # Create your views here.
 def index(request):
     return  render(request , 'index.html')
 
 @login_required
 def dashboard(request):
-    return render(request , 'dashboard/blank.html')
+    return render(request , 'dashboard/index.html')
 
 
 from django.views import generic
@@ -26,60 +28,87 @@ class QuestionDetailView(generic.DetailView):
 def login(request):
     return render(request , 'login.html')
 
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+# def StudentRegister(request):
+#     if request.method == 'POST':
+#         form = UserRegisterForm(request.POST)
+#         s_reg_form = StudentRegisterForm(request.POST)
+#     if form.is_valid() and s_reg_form.is_valid():
+#         user = form.save()
+#         user.refresh_from_db()  # load the profile instance created by the signal
+#         s_reg_form = StudentRegisterForm(request.POST, instance=user.profile)
+#         s_reg_form.full_clean()
+#         s_reg_form.save()
+#         messages.success(request, f'Your account has been sent for approval!')
+#         return redirect('login')
+#     else:
+#         form = UserRegisterForm()
+#         s_reg_form = StudentRegisterForm()
+#         context = {
+#             'form': form,
+#             's_reg_form': s_reg_form
+#         }
+#     return render(request, 'StudentRegister.html', context)
+#
+# def FacultyRegister(request):
+#     if request.method == 'POST':
+#         form = UserRegisterForm(request.POST)
+#         f_reg_form = FacultyRegisterForm(request.POST)
+#     else:
+#         form = 'dummyString'
+#     if form.is_valid() and f_reg_form.is_valid():
+#         user = form.save()
+#         user.refresh_from_db()  # load the profile instance created by the signal
+#         f_reg_form = FacultyRegisterForm(request.POST, instance=user.profile)
+#         f_reg_form.full_clean()
+#         f_reg_form.save()
+#         messages.success(request, f'Your account has been sent for approval!')
+#         return redirect('login')
+#     else:
+#         form = UserRegisterForm()
+#         s_reg_form = StudentRegisterForm()
+#         context = {
+#             'form': form,
+#             's_reg_form': s_reg_form
+#         }
+#     return render(request, 'StudentRegister.html', context)
 
-class CourseListView(generic.ListView):
-    model = Course
+# def StudentSignUpForm(request):
+#     if request.method == 'POST':
+#         form = ExtendedUserCreationForm(request.POST)
+#         student_form = StudentSignUpForm(request.POST)
+#
+#         if form.is_valid() and student_form.is_valid():
+#             user = form.save()
+#             student = student_form.save(commit=False)
+#             student.save()
+#             username = form.cleaned_data.get('username')
+#             password = form.cleaned_data.get('password')
+#             user = authenticate(username = username , password = password)
+#             login(request,user)
+#             return redirect('index')
+#     else:
+#         form = ExtendedUserCreationForm(request.POST)
+#         student_form = StudentSignUpForm(request.POST)
+#     context = {'form': form , 'student_form':student_form}
+
+def registerView(request):
+    return render(request , 'registration/register.html')
+
 
 class CourseCreate(CreateView):
     model = Course
-    fields = '__all__'
+    template_name = 'dashboard/course.html'
+    fields = ['name' , 'branch','year','semester']
+    def form_valid(self, form):
+        faculty = Faculty.objects.get(user=self.request.user)
+        form.instance.faculty = faculty
+        return super(CourseCreate, self).form_valid(form)
 
-class CourseUpdate(UpdateView):
+class CourseListView(generic.ListView):
     model = Course
-    fields = '__all__'
-
-class CourseDelete(DeleteView):
-    model = Course
-    success_url = reverse_lazy('course')
-
-class CourseDetailView(generic.DetailView):
-    model = Course
-
-
-
-
-def emp(request):
-    if request.method == "POST":
-        form = CourseForm(request.POST)
-        if form.is_valid():
-            try:
-                form.save()
-                return redirect('show')
-            except:
-                pass
-    else:
-        form = CourseForm()
-    return render(request,'index.html',{'form':form})
-
-def show(request):
-    courses = Course.objects.all()
-    return render(request,'show.html',{'courses':courses})
-
-def edit(request, id):
-    course = Course.objects.get(id=id)
-    return render(request,'edit.html', {'course':course})
-
-def update(request, id):
-    course = Course.objects.get(id=id)
-    form = CourseForm(request.POST, instance = course)
-    if form.is_valid():
-        form.save()
-        return redirect("show")
-    return render(request, 'edit.html', {'course': course})
-
-def destroy(request, id):
-    course = Course.objects.get(id=id)
-    course.delete()
-    return redirect("show")
+    template_name = "dashboard/course_list.html"
+    context_object_name = 'course_list'
+    paginate_by = 10
+    def get_queryset(self):
+        faculty = Faculty.objects.get(user=self.request.user)
+        return Course.objects.filter(faculty=faculty)
