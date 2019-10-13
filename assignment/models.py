@@ -49,19 +49,23 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
-    def get_absolute_url(self):
-        """Returns the url to access a detail record for this book."""
-        return reverse('course-detail', args=[str(self.id)])
+    # def get_absolute_url(self):
+    #     """Returns the url to access a detail record for this book."""
+    #     return reverse('course-detail', args=[str(self.id)])
 
 class Assignment(models.Model):
     number = models.IntegerField()
     course = models.ForeignKey(Course,on_delete = models.SET_NULL,blank=True,null=True)
-    publish_date = models.DateTimeField(auto_now_add = True)
+    publish_date = models.DateField(auto_now_add = True)
     deadline_date = models.DateField()
     faculty = models.ForeignKey(Faculty,on_delete = models.SET_NULL,blank=True,null=True)
 
     def __str__(self):
-        return f'Assignment {self.number} {self.course}'
+        return f'Assignment {self.number}-{self.course}'
+
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this Assignment."""
+        return reverse('assignment-detail', args=[str(self.id)])
 
 class Question(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.SET_NULL,blank=True,null=True)

@@ -1,8 +1,9 @@
 from django import forms
 from django.forms import ModelChoiceField
-from .models import Student,Faculty,Branch,StudyYear
+from .models import Student,Faculty,Branch,StudyYear,Course,Assignment,Question
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from bootstrap_modal_forms.forms import BSModalForm
 
 # class UserRegisterForm(UserCreationForm):
 #     email = forms.EmailField()
@@ -53,3 +54,25 @@ class FacultySignUpForm(forms.ModelForm):
     class Meta :
         model = Faculty
         fields = ('code','branch')
+
+
+
+
+class CreateAssignmentForm(forms.ModelForm):
+    course = forms.ModelChoiceField(queryset=None,empty_label=None,label = 'Please select course')
+    deadline_date = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+
+    def __init__(self, *args, **kwargs):   # no user here
+        user = kwargs.pop('user', None)
+        faculty = Faculty.objects.get(user = user)
+        super(CreateAssignmentForm, self).__init__(*args, **kwargs)
+        self.fields['course'].queryset = Course.objects.filter(faculty=faculty)
+
+    class Meta:
+        model = Assignment
+        fields = ('number', 'course', 'deadline_date')
+
+class AddAssignmentQuestionForm(BSModalForm):
+    class Meta:
+        model = Question
+        exclude = ['username','date']

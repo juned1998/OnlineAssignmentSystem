@@ -1,0 +1,57 @@
+{% extends "./base.html" %}
+{% block content %}
+  <h1>Course:{{assignment.course }}</h1>
+
+  <p><strong>Assignment:</strong> {{ assignment.number }}</p> <!-- author detail link not yet defined -->
+  <p><strong>publish_date:</strong> {{ assignment.publish_date }}</p>
+  <p><strong>deadline:</strong> {{assignment.deadline_date}}</p>
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Questions</h4>
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Question Title</th>
+          <th scope="col">Question Marks</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for question in assignment.question_set.all %}
+        <tr>
+          <td>{{ question.title }}</td>
+          <td>{{ question.marks }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <!-- Button trigger modal -->
+
+  </div>
+
+
+  <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Create book button -->
+  <button class="create-question btn btn-primary" type="button" name="button">Add Question</button>
+
+
+
+
+
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+$(document).ready(function() {
+
+    $(".create-question").modalForm({
+        formURL: "{% url 'CreateAssignmentQuestion' %}"
+    });
+
+});
+</script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "./base.html" %}
+{% block content %}
+
+{% if assignment_list %}
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Assignment No.</th>
+        <th scope="col">Course</th>
+        <th scope="col">publish date</th>
+        <th scope="col">Deadline Date</th>
+        <th scope="col">Update</th>
+        <th scope="col">Delete</th>
+        <th scope="col">Questions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for assignment in assignment_list %}
+      <tr>
+        <td>{{ assignment.number }}</td>
+        <td>{{ assignment.course }}</td>
+        <td>{{ assignment.publish_date }}</td>
+        <td>{{ assignment.deadline_date }}</td>
+        <td> <a href="{% url 'UpdateAssignment' assignment.id %}">Update</a> </td>
+        <td> <a onclick="return confirm('Are you sure?');" href="{% url 'DeleteAssignment' assignment.id %}">Delete</a></td>
+        <td><a href="{% url 'assignment_detail' assignment.id %}">View Questions</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p>There are no assignments added yet !</p>
+  {% endif %}
+{% endblock %}
