@@ -14,6 +14,7 @@
           <th scope="col">Question Marks</th>
           <th scope="col">Edit Question</th>
           <th scope="col">Delete Question</th>
+          <th scope="col">View Submitted Answers</th>
         </tr>
       </thead>
       <tbody>
@@ -22,16 +23,17 @@
           <td>{{ question.title }}</td>
           <td>{{ question.marks }}</td>
           <td> <a href="{% url 'UpdateQuestion'  assignment.id question.id %}">Edit</a> </td>
-          <td> <a onclick="return confirm('Are you sure?');" href="{% url 'DeleteQuestion'  assignment.id question.id %}">Delete</a></td>
+          <td> <a onclick="return confirm('Are you sure?');" href="{% url 'DeleteQuestion'  assignment_pk=assignment.id pk=question.id %}">Delete</a></td>
+          <td> <a href="#">View all answers</a></td>
         </tr>
       {% endfor %}
       </tbody>
     </table>
     <!-- Button trigger modal -->
-
+<a class=" btn btn-primary" href="{% url 'CreateQuestion' pk=assignment.id %}">Add Question</a>
   </div>
 
-  <a class=" btn btn-primary" href="{% url 'CreateQuestion' assignment.id %}">Add Question</a>
+
 
 
 

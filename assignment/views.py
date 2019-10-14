@@ -14,6 +14,24 @@ def dashboard(request):
     return render(request , 'dashboard/index.html')
 
 
+def FacultyRegistration(request):
+    if request.method == "POST":
+        if request.POST['pass'] == request.POST['passwordagain']:
+            try:
+                user = User.objects.get(username = request.POST['uname'])
+                return render(request, 'registration/FacultyRegistration.html',{'error':"Username already exists"})
+            except User.DoesNotExist:
+                user = User.objects.create_user(username = request.POST['uname'] , password=request.POST['pass'])
+                code = 
+                branch
+                year
+                auth.login(request,user)
+                return HttpResponse("Signed Up !")
+        else:
+            return render(request , 'register.html' , {'error' : "Password doesn't Match !"})
+    else:
+        return render(request,'registration/FacultyRegistration.html')
+
 from django.views import generic
 class QuestionListView(generic.ListView):
     model = Question
@@ -230,24 +248,32 @@ def QuestionUpdate(request, question_pk , assignment_pk):
     else:
         form = AddAssignmentQuestionForm(instance=question)
     return render(request, 'dashboard/update_question.html', {'quiz': assignment,'question':question,'form': form})
+#
+# class QuestionDeleteView(DeleteView):
+#     model = Question
+#     template_name = "dashboard/assignment_detail.html"
+#     context_object_name = 'question'
+#     pk_url_kwarg = 'question_pk'
+#     def get_context_data(self , **kwargs):
+#         question = self.get_object()
+#         kwargs['assignment']= question.assignment
+#         return super().get_context_data(**kwargs)
+#
+#     def delete(self , request , *args , **kwargs):
+#         question = self.get_object()
+#         return super().delete(request, *args , **kwargs)
+#
+#     def get_queryset(self):
+#         return Question.objects.filter(assignment__faculty=self.request.user.faculty)
+#
+#     def get_success_url(self):
+#         question = self.get_object()
+#         return reverse('assignment_detail' , kwargs={'pk':question.assignment_id})
 
+
+#
 class QuestionDeleteView(DeleteView):
     model = Question
-    template_name = "dashboard/assignment_detail.html"
-    context_object_name = 'question'
-    pk_url_kwarg = 'question_pk'
-    def get_context_data(self , **kwargs):
-        question = self.get_object()
-        kwargs['assignment']= question.assignment
-        return super().get_context_data(**kwargs)
-
-    def delete(self , request , *args , **kwargs):
-        question = self.get_object()
-        return super().delete(request, *args , **kwargs)
-
-    def get_queryset(self):
-        return Question.objects.filter(assignment__faculty = self.request.user.faculty)
-
+    template_name = 'dashboard/assignment_detail.html'
     def get_success_url(self):
-        question = self.get_object()
-        return reverse('assignment_detail' , kwargs={'pk':question.assignment_id})
+        return reverse_lazy('assignment_detail', kwargs={'pk': self.object.assignment_id})

@@ -46,7 +46,16 @@
             <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+          <div class="nav-item dropdown">
+              <button class="btn btn-primary my-2 my-sm-0 mx-1 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                 Dashboard
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{% url 'dashboard' %}">Faculty</a>
+                <a class="dropdown-item" href="#">Student</a>
+              </div>
+            </div>
+
           </li>
 
         </ul>
@@ -58,11 +67,42 @@
           <a class="btn btn-primary my-2 my-sm-0 mx-1" href="{% url 'logout' %}?next=/" type="submit">Logout</a>
           {% else %}
           <a class="btn btn-primary my-2 my-sm-0 mx-1" href="{% url 'login' %}" type="submit">Login</a>
+
+          <div class="dropdown">
+              <button class="btn btn-primary my-2 my-sm-0 mx-1 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                 Registration
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Student</a>
+                <a class="dropdown-item" href="{% url 'FacultyRegistration' %}">Faculty</a>
+              </div>
+            </div>
+
         {% endif%}
       </div>
     </nav>
 
-    {%block content %}{% endblock %}
+    {%block content %}
+
+    {% endblock %}
+    {% block pagination %}
+    {% if is_paginated %}
+        <div class="pagination justify-center">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="page-current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+  {% endblock %}
+
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
