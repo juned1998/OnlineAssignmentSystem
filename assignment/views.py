@@ -191,10 +191,63 @@ class AssignmentDetailView(generic.DetailView):
     model = Assignment
     template_name = "dashboard/assignment_detail.html"
 
-from bootstrap_modal_forms.generic import BSModalCreateView
+#
+# class QuestionCreate(CreateView):
+#     model = Question
+#     template_name = 'dashboard/add_question.html'
+#     fields = ['title' , 'description','marks']
+#     def form_valid(self, form):
+#         assignment = Assignment.objects.get(id = self.request.pk)
+#         form.instance.assignment = assignment
+#         return super(QuestionCreate, self).form_valid(form)
+#     def get_success_url(self):
+#         return reverse('assignment_detail', kwargs={'assignment_id': building_id})
+
 from .forms import AddAssignmentQuestionForm
-class QuestionCreateView(BSModalCreateView):
-    template_name = 'dashboard/addAssignmentQuestion.html'
-    form_class = AddAssignmentQuestionForm
-    success_message = 'Success: Question was created.'
-    success_url = reverse_lazy('assignment_detail')
+from django.shortcuts import get_object_or_404
+
+def QuestionCreate(request, pk):
+    assignment = get_object_or_404(Assignment, pk=pk)
+    if request.method == 'POST':
+        form = AddAssignmentQuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.assignment = assignment
+            question.save()
+            return redirect('assignment_detail', assignment.pk)
+    else:
+        form = AddAssignmentQuestionForm()
+    return render(request, 'dashboard/add_question.html', {'quiz': assignment, 'form': form})
+
+def QuestionUpdate(request, question_pk , assignment_pk):
+    assignment = get_object_or_404(Assignment, pk=assignment_pk)
+    question = get_object_or_404(Question, pk=question_pk)
+    if request.method == 'POST':
+        form = AddAssignmentQuestionForm(request.POST , instance = question )
+        if form.is_valid():
+            form.save()
+            return redirect('assignment_detail',assignment.id)
+    else:
+        form = AddAssignmentQuestionForm(instance=question)
+    return render(request, 'dashboard/update_question.html', {'quiz': assignment,'question':question,'form': form})
+
+class QuestionDeleteView(DeleteView):
+    model = Question
+    template_name = "dashboard/assignment_detail.html"
+    context_object_name = 'question'
+    pk_url_kwarg = 'question_pk'
+    def get_context_data(self , **kwargs):
+        question = self.get_object()
+        kwargs['assignment']= question.assignment
+        return super().get_context_data(**kwargs)
+
+    def delete(self , request , *args , **kwargs):
+        question = self.get_object()
+        return super().delete(request, *args , **kwargs)
+
+    def get_queryset(self):
+        return Question.objects.filter(assignment__faculty = self.request.user.faculty)
+
+    def get_success_url(self):
+        question = self.get_object()
+        return reverse('assignment_detail' , kwargs={'pk':question.assignment_id})

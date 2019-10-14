@@ -15,5 +15,7 @@ urlpatterns = [
     path('assignment/<int:pk>/update/', views.AssigmentUpdate.as_view(), name='UpdateAssignment'),
     path('assignment/<int:pk>/delete/', views.AssignmentDelete.as_view(), name='DeleteAssignment'),
     path('assignment/<int:pk>', views.AssignmentDetailView.as_view(), name='assignment_detail'),
-    path('addAssignmentQuestion/', views.QuestionCreateView.as_view(), name='CreateAssignmentQuestion'),
+    path('<int:pk>/addQuestion/', views.QuestionCreate, name='CreateQuestion'),
+    path('<int:assignment_pk>/UpdateQuestion/<int:question_pk>', views.QuestionUpdate, name='UpdateQuestion'),
+    path('<int:assignment_pk>/Question/<int:question_pk>/delete', views.QuestionDeleteView.as_view(), name='DeleteQuestion'),
 ]

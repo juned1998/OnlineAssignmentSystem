@@ -72,7 +72,7 @@ class CreateAssignmentForm(forms.ModelForm):
         model = Assignment
         fields = ('number', 'course', 'deadline_date')
 
-class AddAssignmentQuestionForm(BSModalForm):
+class AddAssignmentQuestionForm(forms.ModelForm):
     class Meta:
         model = Question
-        exclude = ['username','date']
+        exclude = ['username','date','assignment']

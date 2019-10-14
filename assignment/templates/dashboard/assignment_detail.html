@@ -12,6 +12,8 @@
         <tr>
           <th scope="col">Question Title</th>
           <th scope="col">Question Marks</th>
+          <th scope="col">Edit Question</th>
+          <th scope="col">Delete Question</th>
         </tr>
       </thead>
       <tbody>
@@ -19,6 +21,8 @@
         <tr>
           <td>{{ question.title }}</td>
           <td>{{ question.marks }}</td>
+          <td> <a href="{% url 'UpdateQuestion'  assignment.id question.id %}">Edit</a> </td>
+          <td> <a onclick="return confirm('Are you sure?');" href="{% url 'DeleteQuestion'  assignment.id question.id %}">Delete</a></td>
         </tr>
       {% endfor %}
       </tbody>
@@ -27,31 +31,12 @@
 
   </div>
 
-
-  <div class="modal fade" tabindex="-1" role="dialog" id="modal">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-
-      </div>
-    </div>
-  </div>
-
-  <!-- Create book button -->
-  <button class="create-question btn btn-primary" type="button" name="button">Add Question</button>
-
+  <a class=" btn btn-primary" href="{% url 'CreateQuestion' assignment.id %}">Add Question</a>
 
 
 
 
 {% endblock %}
 {% block script %}
-<script type="text/javascript">
-$(document).ready(function() {
 
-    $(".create-question").modalForm({
-        formURL: "{% url 'CreateAssignmentQuestion' %}"
-    });
-
-});
-</script>
 {% endblock %}

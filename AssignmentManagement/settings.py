@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'assignment',
     'crispy_forms',
+    'widget_tweaks',
     'bootstrap_modal_forms',
 ]
 
