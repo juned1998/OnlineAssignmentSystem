@@ -30,7 +30,15 @@
           <td>{{ question.title }}</td>
           <td>{{ question.marks }}</td>
           <td><a href="{% url 'CreateAnswer' question.id %}">Add Answer</a></td>
-          <td><a href="#">Your Answer</a></td>
+          {% for answer in question.answer_set.all %}
+
+            {% if answer.username  %}
+            <td><a href="{% url 'student_answer' pk=question.id apk=assignment.id %}">Your Answer</a></td>
+            {% else %}
+            <td>No Answer submitted </td>
+            {% endif %}
+
+          {% endfor %}
 
         </tr>
       {% endfor %}

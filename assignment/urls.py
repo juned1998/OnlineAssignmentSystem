@@ -34,4 +34,7 @@ urlpatterns += [
     path('student_course/<int:pk>', views.StudentCourseDetailView.as_view(), name='student_course_detail'),
     path('student_assignment/<int:pk>/', views.StudentAssignmentDetailView.as_view(), name='student_assignment_detail'),
     path('<int:pk>/createAnswer/', views.AnswerCreate, name='CreateAnswer'),
+    path('<int:apk>/student_answer/<int:pk>/', views.getAnswer ,name='student_answer'),
+    # path('student_answer/<int:pk>/', views.StudentAnswerDetailView.as_view(), name='student_answer_detail'),
+    # path('student_question/<int:pk>/', views.StudentQuestionDetailView.as_view(), name='student_question_detail'),
 ]

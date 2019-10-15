@@ -254,6 +254,7 @@ def QuestionCreate(request, pk):
         form = AddAssignmentQuestionForm()
     return render(request, 'Faculty_Dashboard/add_question.html', {'assignment': assignment, 'form': form ,'pk': assignment.id })
 
+
 def QuestionUpdate(request, question_pk , assignment_pk):
     assignment = get_object_or_404(Assignment, pk=assignment_pk)
     question = get_object_or_404(Question, pk=question_pk)
@@ -330,3 +331,18 @@ def AnswerCreate(request, pk):
     else:
         form = AddAssignmentAnswerForm()
     return render(request, 'Student_Dashboard/add_answer.html', {'question': question, 'form': form ,'pk': question.assignment.id  })
+
+def getAnswer(request,pk,apk):
+    assignment = get_object_or_404(Assignment,pk=apk)
+    question = get_object_or_404(Question,pk=pk)
+    answer = get_object_or_404(Answer,question=question,username=request.user)
+    return render(request, 'Student_Dashboard/answer_detail.html', {'question': question, 'answer':answer , 'assignment': assignment  })
+
+
+# class StudentAnswerDetailView(generic.DetailView):
+#     model = Answer
+#     template_name = "Student_Dashboard/answer_detail.html"
+#
+# class StudentQuestionDetailView(generic.DetailView):
+#     model = Question
+#     template_name = "Student_Dashboard/question_detail.html"

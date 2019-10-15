@@ -1,0 +1,21 @@
+{% extends "./base.html" %}
+
+{% block breadcrumb%}
+<li class="breadcrumb-item "><a href="{% url 'AllAssignment' %}">Assignments</a></li>
+<li class="breadcrumb-item "><a href="{% url 'student_course_detail' assignment.course_id %}">Course Specific</a></li>
+<li class="breadcrumb-item"><a href="{% url 'student_assignment_detail' assignment.id %}">Question list</a></li>
+<li class="breadcrumb-item active">Your answer</li>
+{%endblock%}
+
+{% block content %}
+{% if answer %}
+  <h1>Question :{{question}}</h1>
+  <p>{{answer.answer_txt}}</p>
+    {% else %}
+      <p>There are no answers added yet !</p>
+    {% endif %}
+
+  </div>
+
+
+{% endblock %}
