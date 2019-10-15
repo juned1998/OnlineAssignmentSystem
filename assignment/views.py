@@ -10,8 +10,8 @@ def index(request):
     return  render(request , 'index.html')
 
 @login_required
-def dashboard(request):
-    return render(request , 'dashboard/index.html')
+def FacultyDashboard(request):
+    return render(request , 'Faculty_Dashboard/index.html')
 
 
 def FacultyRegistration(request):
@@ -22,9 +22,6 @@ def FacultyRegistration(request):
                 return render(request, 'registration/FacultyRegistration.html',{'error':"Username already exists"})
             except User.DoesNotExist:
                 user = User.objects.create_user(username = request.POST['uname'] , password=request.POST['pass'])
-                code = 
-                branch
-                year
                 auth.login(request,user)
                 return HttpResponse("Signed Up !")
         else:
@@ -37,9 +34,9 @@ class QuestionListView(generic.ListView):
     model = Question
     template_name = 'index.html'
     paginate_by = 10
-
     def get_queryset(self):
-        return Question.objects.all()
+        return Question.objects.order_by('-date')
+
 
 class QuestionDetailView(generic.DetailView):
     model = Question
@@ -116,7 +113,7 @@ def registerView(request):
 
 class CourseCreate(CreateView):
     model = Course
-    template_name = 'dashboard/add_course.html'
+    template_name = 'Faculty_Dashboard/add_course.html'
     fields = ['name' , 'branch','year','semester']
     def form_valid(self, form):
         faculty = Faculty.objects.get(user=self.request.user)
@@ -127,7 +124,7 @@ class CourseCreate(CreateView):
 
 class CourseUpdate(UpdateView):
     model = Course
-    template_name = 'dashboard/add_course.html'
+    template_name = 'Faculty_Dashboard/add_course.html'
     fields = ['name' , 'branch','year','semester']
     def form_valid(self, form):
         faculty = Faculty.objects.get(user=self.request.user)
@@ -138,15 +135,19 @@ class CourseUpdate(UpdateView):
 
 class CourseDelete(DeleteView):
     model = Course
-    template_name = "dashboard/course_list.html"
+    template_name = "Faculty_Dashboard/course_list.html"
     success_url = reverse_lazy('ViewCourse')
     def get(self, request, *args, **kwargs):
         return self.delete(request, *args, **kwargs)
 
+class CourseDetailView(generic.DetailView):
+    model = Course
+    template_name = "Faculty_Dashboard/course_detail.html"
+
 
 class CourseListView(generic.ListView):
     model = Course
-    template_name = "dashboard/course_list.html"
+    template_name = "Faculty_Dashboard/course_list.html"
     context_object_name = 'course_list'
     paginate_by = 10
     def get_queryset(self):
@@ -157,7 +158,7 @@ from .forms import CreateAssignmentForm
 class AssignmentCreate(CreateView):
     model = Assignment
     form_class = CreateAssignmentForm
-    template_name = 'dashboard/add_assignment.html'
+    template_name = 'Faculty_Dashboard/add_assignment.html'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -174,7 +175,7 @@ class AssignmentCreate(CreateView):
 class AssigmentUpdate(UpdateView):
     model = Assignment
     form_class = CreateAssignmentForm
-    template_name = 'dashboard/add_assignment.html'
+    template_name = 'Faculty_Dashboard/add_assignment.html'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -184,14 +185,33 @@ class AssigmentUpdate(UpdateView):
     def form_valid(self, form):
         faculty = Faculty.objects.get(user=self.request.user)
         form.instance.faculty = faculty
-        return super(AssignmentCreate, self).form_valid(form)
+        return super(AssigmentUpdate, self).form_valid(form)
+
     def get_success_url(self):
         return reverse('ViewAssignment')
+
+class CourseAssigmentUpdate(UpdateView):
+    model = Assignment
+    form_class = CreateAssignmentForm
+    template_name = 'Faculty_Dashboard/add_assignment.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        faculty = Faculty.objects.get(user=self.request.user)
+        form.instance.faculty = faculty
+        return super(CourseAssigmentUpdate, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('course_detail', kwargs={'pk': self.object.course_id})
 
 
 class AssignmentListView(generic.ListView):
     model = Assignment
-    template_name = "dashboard/assignment_list.html"
+    template_name = "Faculty_Dashboard/assignment_list.html"
     context_object_name = 'assignment_list'
     paginate_by = 10
     def get_queryset(self):
@@ -200,30 +220,27 @@ class AssignmentListView(generic.ListView):
 
 class AssignmentDelete(DeleteView):
     model = Assignment
-    template_name = "dashboard/assignment_list.html"
+    template_name = "Faculty_Dashboard/assignment_list.html"
     success_url = reverse_lazy('ViewAssignment')
     def get(self, request, *args, **kwargs):
         return self.delete(request, *args, **kwargs)
 
+#Returns to Course Assignment list after deleting
+class CourseAssignmentDelete(DeleteView):
+    model = Assignment
+    template_name = "Faculty_Dashboard/course_detail.html"
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+    def get_success_url(self):
+        return reverse_lazy('course_detail', kwargs={'pk': self.object.course_id})
+
 class AssignmentDetailView(generic.DetailView):
     model = Assignment
-    template_name = "dashboard/assignment_detail.html"
+    template_name = "Faculty_Dashboard/assignment_detail.html"
 
-#
-# class QuestionCreate(CreateView):
-#     model = Question
-#     template_name = 'dashboard/add_question.html'
-#     fields = ['title' , 'description','marks']
-#     def form_valid(self, form):
-#         assignment = Assignment.objects.get(id = self.request.pk)
-#         form.instance.assignment = assignment
-#         return super(QuestionCreate, self).form_valid(form)
-#     def get_success_url(self):
-#         return reverse('assignment_detail', kwargs={'assignment_id': building_id})
 
-from .forms import AddAssignmentQuestionForm
 from django.shortcuts import get_object_or_404
-
+from .forms import AddAssignmentQuestionForm
 def QuestionCreate(request, pk):
     assignment = get_object_or_404(Assignment, pk=pk)
     if request.method == 'POST':
@@ -235,7 +252,7 @@ def QuestionCreate(request, pk):
             return redirect('assignment_detail', assignment.pk)
     else:
         form = AddAssignmentQuestionForm()
-    return render(request, 'dashboard/add_question.html', {'quiz': assignment, 'form': form})
+    return render(request, 'Faculty_Dashboard/add_question.html', {'quiz': assignment, 'form': form ,'pk': assignment.id })
 
 def QuestionUpdate(request, question_pk , assignment_pk):
     assignment = get_object_or_404(Assignment, pk=assignment_pk)
@@ -247,33 +264,24 @@ def QuestionUpdate(request, question_pk , assignment_pk):
             return redirect('assignment_detail',assignment.id)
     else:
         form = AddAssignmentQuestionForm(instance=question)
-    return render(request, 'dashboard/update_question.html', {'quiz': assignment,'question':question,'form': form})
-#
-# class QuestionDeleteView(DeleteView):
-#     model = Question
-#     template_name = "dashboard/assignment_detail.html"
-#     context_object_name = 'question'
-#     pk_url_kwarg = 'question_pk'
-#     def get_context_data(self , **kwargs):
-#         question = self.get_object()
-#         kwargs['assignment']= question.assignment
-#         return super().get_context_data(**kwargs)
-#
-#     def delete(self , request , *args , **kwargs):
-#         question = self.get_object()
-#         return super().delete(request, *args , **kwargs)
-#
-#     def get_queryset(self):
-#         return Question.objects.filter(assignment__faculty=self.request.user.faculty)
-#
-#     def get_success_url(self):
-#         question = self.get_object()
-#         return reverse('assignment_detail' , kwargs={'pk':question.assignment_id})
+    return render(request, 'Faculty_Dashboard/update_question.html', {'quiz': assignment,'question':question,'form': form})
 
 
-#
+
+
+
 class QuestionDeleteView(DeleteView):
     model = Question
-    template_name = 'dashboard/assignment_detail.html'
+    template_name = "Faculty_Dashboard/assignment_detail.html"
+    # success_url = reverse_lazy('assignment_detail', kwargs={'pk': self.object.assignment_id})
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
     def get_success_url(self):
         return reverse_lazy('assignment_detail', kwargs={'pk': self.object.assignment_id})
+
+
+
+############# Student Dashboard ######################################################################################################################
+@login_required
+def StudentDashboard(request):
+    return render(request , 'Student_Dashboard/index.html')

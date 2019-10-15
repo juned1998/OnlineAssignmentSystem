@@ -21,7 +21,7 @@
       </div>
       <div class = "Qbox col-md-6 my-3 mx-3 " style = "border : solid 1px #ddd">
         <h6 class="mx-3 my-3" >{{question.assignment.course}} | Assignment no.{{question.assignment.number}}</h6>
-        <h3> {{question.title}}</h3>
+        <h3 style=" "> {{question.title}}</h3>
 
         <a href="{{ question.get_absolute_url }}" class="mx-3 my-1 viewAnswers" > view all {{ question.answer.all.count }} answers</a>
       </div>

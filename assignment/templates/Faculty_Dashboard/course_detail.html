@@ -1,0 +1,50 @@
+{% extends "./base.html" %}
+
+{% block breadcrumb%}
+<li class="breadcrumb-item "><a href="{% url 'ViewCourse' %}">All Course</a></li>
+<li class="breadcrumb-item active">Course Specific Assignment</li>
+{%endblock%}
+
+{% block content %}
+  <h1>Course:{{course.name }}</h1>
+  <p><strong>Semester:</strong> {{ course.semester }}</p>
+  <p><strong>Branch:</strong> {{ course.branch }}</p>
+  <p><strong>Year:</strong> {{course.year}}</p>
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Assignments related to this course</h4>
+    {% if course.assignment_set.all %}
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Assignment Number</th>
+          <th scope="col">Publish Date</th>
+          <th scope="col">Deadline</th>
+          <th scope="col">Delete</th>
+          <th scope="col">Edit</th>
+          <th scope="col">View</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for assignment in course.assignment_set.all %}
+        <tr>
+          <td>{{ assignment.number }}</td>
+          <td>{{ assignment.publish_date }}</td>
+          <td>{{ assignment.deadline_date }}</td>
+          <td> <a href="{% url 'UpdateCourseAssignment' assignment.id %}">Update</a> </td>
+          <td> <a onclick="return confirm('Are you sure?');" href="{% url 'DeleteCourseAssignment' assignment.id %}">Delete</a></td>
+          <td><a href="{% url 'assignment_detail'  assignment.id %}">View Questions</a></td>
+
+
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p>There are no assignments added yet !</p>
+    {% endif %}
+
+  </div>
+
+
+{% endblock %}

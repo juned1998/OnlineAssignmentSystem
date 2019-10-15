@@ -1,4 +1,9 @@
 {% extends "./base.html" %}
+{% block breadcrumb%}
+<li class="breadcrumb-item active">All Course</li>
+{%endblock%}
+
+
 {% block content %}
 
 {% if course_list %}
@@ -9,17 +14,20 @@
         <th scope="col">Course Branch</th>
         <th scope="col">Course Year</th>
         <th scope="col">Course Semester</th>
+        <th scope="col">Assigments</th>
         <th scope="col">Update</th>
         <th scope="col">Delete</th>
       </tr>
     </thead>
     <tbody>
+
       {% for course in course_list %}
       <tr>
         <td>{{ course.name }}</td>
         <td>{{ course.branch }}</td>
         <td>{{ course.year }}</td>
         <td>{{ course.semester }}</td>
+        <td><a href="{% url 'course_detail' course.id %}">All Assigments</a></td>
         <td> <a href="{% url 'UpdateCourse' course.id %}">Update</a> </td>
         <td> <a onclick="return confirm('Are you sure?');" href="{% url 'DeleteCourse' course.id %}">Delete</a></td>
       </tr>

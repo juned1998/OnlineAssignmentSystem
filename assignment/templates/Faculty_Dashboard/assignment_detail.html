@@ -1,8 +1,15 @@
 {% extends "./base.html" %}
+
+{% block breadcrumb%}
+<li class="breadcrumb-item "><a href="{% url 'ViewAssignment' %}"> All Assignments</a></li>
+<li class="breadcrumb-item "><a href="{% url 'course_detail' assignment.course_id %}">Course Specific</a></li>
+<li class="breadcrumb-item active">Question list</li>
+{%endblock%}
+
 {% block content %}
   <h1>Course:{{assignment.course }}</h1>
 
-  <p><strong>Assignment:</strong> {{ assignment.number }}</p> <!-- author detail link not yet defined -->
+  <p><strong>Assignment:</strong> {{ assignment.number }}</p>
   <p><strong>publish_date:</strong> {{ assignment.publish_date }}</p>
   <p><strong>deadline:</strong> {{assignment.deadline_date}}</p>
   <div style="margin-left:20px;margin-top:20px">
