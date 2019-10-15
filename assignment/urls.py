@@ -29,4 +29,9 @@ urlpatterns = [
 #STudent dashboard
 urlpatterns += [
     path('StudentDashboard',views.StudentDashboard,name='StudentDashboard'),
+    path('student_course_list/',views.StudentCourseListView.as_view(),name='AllCourse'),
+    path('student_assigment_list/',views.StudentAssignmentListView.as_view(),name='AllAssignment'),
+    path('student_course/<int:pk>', views.StudentCourseDetailView.as_view(), name='student_course_detail'),
+    path('student_assignment/<int:pk>/', views.StudentAssignmentDetailView.as_view(), name='student_assignment_detail'),
+    path('<int:pk>/createAnswer/', views.AnswerCreate, name='CreateAnswer'),
 ]

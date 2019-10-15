@@ -252,7 +252,7 @@ def QuestionCreate(request, pk):
             return redirect('assignment_detail', assignment.pk)
     else:
         form = AddAssignmentQuestionForm()
-    return render(request, 'Faculty_Dashboard/add_question.html', {'quiz': assignment, 'form': form ,'pk': assignment.id })
+    return render(request, 'Faculty_Dashboard/add_question.html', {'assignment': assignment, 'form': form ,'pk': assignment.id })
 
 def QuestionUpdate(request, question_pk , assignment_pk):
     assignment = get_object_or_404(Assignment, pk=assignment_pk)
@@ -264,7 +264,7 @@ def QuestionUpdate(request, question_pk , assignment_pk):
             return redirect('assignment_detail',assignment.id)
     else:
         form = AddAssignmentQuestionForm(instance=question)
-    return render(request, 'Faculty_Dashboard/update_question.html', {'quiz': assignment,'question':question,'form': form})
+    return render(request, 'Faculty_Dashboard/update_question.html', {'assignment': assignment,'question':question,'form': form})
 
 
 
@@ -285,3 +285,48 @@ class QuestionDeleteView(DeleteView):
 @login_required
 def StudentDashboard(request):
     return render(request , 'Student_Dashboard/index.html')
+
+class StudentCourseListView(generic.ListView):
+    model = Course
+    template_name = "Student_Dashboard/course_list.html"
+    context_object_name = 'course_list'
+    paginate_by = 10
+    def get_queryset(self):
+        student = Student.objects.get(user = self.request.user)
+        branch = Branch.objects.get(name=student.branch.name)
+        year = StudyYear.objects.get(year=student.year)
+        return Course.objects.filter(branch=branch,year=year)
+
+class StudentAssignmentListView(generic.ListView):
+    model = Assignment
+    template_name = "Student_Dashboard/assignment_list.html"
+    context_object_name = 'assignment_list'
+    paginate_by = 10
+    def get_queryset(self):
+        student = Student.objects.get(user = self.request.user)
+        branch = Branch.objects.get(name=student.branch)
+        year = StudyYear.objects.get(year=student.year)
+        return Assignment.objects.filter(course__year= year,course__branch=branch)
+
+class StudentCourseDetailView(generic.DetailView):
+    model = Course
+    template_name = "Student_Dashboard/course_detail.html"
+
+class StudentAssignmentDetailView(generic.DetailView):
+    model = Assignment
+    template_name = "Student_Dashboard/assignment_detail.html"
+
+from .forms import AddAssignmentAnswerForm
+def AnswerCreate(request, pk):
+    question = get_object_or_404(Question, pk=pk)
+    if request.method == 'POST':
+        form = AddAssignmentAnswerForm(request.POST)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.username = request.user
+            answer.question = question
+            answer.save()
+            return redirect('student_assignment_detail', question.assignment.id)
+    else:
+        form = AddAssignmentAnswerForm()
+    return render(request, 'Student_Dashboard/add_answer.html', {'question': question, 'form': form ,'pk': question.assignment.id  })

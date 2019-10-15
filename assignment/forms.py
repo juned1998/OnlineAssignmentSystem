@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelChoiceField
-from .models import Student,Faculty,Branch,StudyYear,Course,Assignment,Question
+from .models import Student,Faculty,Branch,StudyYear,Course,Assignment,Question,Answer
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from bootstrap_modal_forms.forms import BSModalForm
@@ -76,3 +76,8 @@ class AddAssignmentQuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         exclude = ['username','date','assignment']
+
+class AddAssignmentAnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        exclude = ['username','assignment','question']

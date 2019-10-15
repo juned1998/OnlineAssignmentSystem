@@ -1,0 +1,36 @@
+{% extends "./base.html" %}
+{% block breadcrumb%}
+<li class="breadcrumb-item active">Courses</li>
+{%endblock%}
+
+
+{% block content %}
+
+{% if course_list %}
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Course Name</th>
+        <th scope="col">Course Branch</th>
+        <th scope="col">Course Year</th>
+        <th scope="col">Course Semester</th>
+        <th scope="col">Assigments</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for course in course_list %}
+      <tr>
+        <td>{{ course.name }}</td>
+        <td>{{ course.branch }}</td>
+        <td>{{ course.year }}</td>
+        <td>{{ course.semester }}</td>
+        <td><a href="{% url 'student_course_detail' course.id %}">All Assigments</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p>There are no course added yet !</p>
+  {% endif %}
+{% endblock %}

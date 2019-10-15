@@ -2,4 +2,7 @@
 {% block content %}
 
   <h1>Welcome {{user.first_name}} {{user.last_name}} !</h1>
+  <p><b>Year</b> : {{user.student.year}}</p>
+  <p><b>Branch</b> : {{user.student.branch}}</p>
+  <p><b>Roll number</b> : {{user.student.rollnumber}}</p>
 {% endblock %}

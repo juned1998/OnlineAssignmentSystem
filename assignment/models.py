@@ -82,9 +82,11 @@ class Question(models.Model):
         return reverse('question-detail', args=[str(self.id)])
 
 class Answer(models.Model):
+    STATUS = [('Draft','Draft'),('Published','Published')]
     question = models.ForeignKey(Question,on_delete = models.CASCADE)
     answer_txt = models.TextField()
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField()
+    status = models.CharField(max_length=12,choices=STATUS,default='Draft')
     username = models.ForeignKey(User,on_delete = models.SET_NULL,null=True)
 
     def __str__(self):

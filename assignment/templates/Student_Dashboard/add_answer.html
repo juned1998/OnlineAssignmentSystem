@@ -1,0 +1,35 @@
+{% extends './base.html' %}
+
+{% block breadcrumb%}
+<li class="breadcrumb-item "><a href="{% url 'AllAssignment' %}">Assignments</a></li>
+<li class="breadcrumb-item"><a href="{% url 'student_assignment_detail' pk %}">Question list</a></li>
+<li class="breadcrumb-item active">Add Question</li>
+{%endblock%}
+
+{% load widget_tweaks %}
+
+{% block content %}
+<h3>{{question.title}}</h3>
+  <h2>Add Answer</h2>
+  <form method="post">
+    {% csrf_token %}
+
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
+    {% for field in form.visible_fields %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field|add_class:'form-control' }}
+        {% for error in field.errors %}
+          <span class="help-block">{{ error }}</span>
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+    <div class="form-group">
+      <input class="btn btn-primary" type="submit" value="Save">
+    </div>
+  </form>
+{% endblock %}
