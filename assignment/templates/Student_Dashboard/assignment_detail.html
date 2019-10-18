@@ -20,8 +20,8 @@
         <tr>
           <th scope="col">Question Title</th>
           <th scope="col">Question Marks</th>
-          <th scope="col">Add Answers</th>
-          <th scope="col">Submitted Answers</th>
+          <th scope="col">Write Answer</th>
+          <th scope="col">Answer Status</th>
         </tr>
       </thead>
       <tbody>
@@ -29,18 +29,10 @@
         <tr>
           <td>{{ question.title }}</td>
           <td>{{ question.marks }}</td>
-          <td><a href="{% url 'CreateAnswer' question.id %}">Add Answer</a></td>
-          {% for answer in question.answer_set.all %}
-
-            {% if answer.username  %}
-            <td><a href="{% url 'student_answer' pk=question.id apk=assignment.id %}">Your Answer</a></td>
-            {% else %}
-            <td>No Answer submitted </td>
-            {% endif %}
-
-          {% endfor %}
-
+          <td></td>
         </tr>
+
+
       {% endfor %}
       </tbody>
     </table>

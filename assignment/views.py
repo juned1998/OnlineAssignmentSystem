@@ -5,6 +5,7 @@ from .forms import ExtendedUserCreationForm,StudentSignUpForm,FacultySignUpForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse
 from django.urls import reverse_lazy
+from django.contrib.auth.models import User
 # Create your views here.
 def index(request):
     return  render(request , 'index.html')
@@ -20,14 +21,53 @@ def FacultyRegistration(request):
             try:
                 user = User.objects.get(username = request.POST['uname'])
                 return render(request, 'registration/FacultyRegistration.html',{'error':"Username already exists"})
+                faculty = Faculty.objects.get( code = request.POST['FacultyCode'])
+                return render(request, 'registration/FacultyRegistration.html',{'error':"Faculty Code already exists"})
             except User.DoesNotExist:
-                user = User.objects.create_user(username = request.POST['uname'] , password=request.POST['pass'])
-                auth.login(request,user)
-                return HttpResponse("Signed Up !")
+                user = User.objects.create_user(username = request.POST['uname'] , password=request.POST['pass'] ,first_name =request.POST['firstName'],last_name = request.POST['lastName'],email=request.POST['email'] )
+                branchName = request.POST['FacultyBranch']
+                branch = Branch.objects.get(name = branchName)
+                code = request.POST['FacultyCode']
+                newFaculty = Faculty(user= user ,branch = branch , code = code )
+                newFaculty.save()
+                # login(user)
+                return render(request ,'registration/FacultyRegistration.html' , {'message' : "Registration succesful please login !"})
         else:
-            return render(request , 'register.html' , {'error' : "Password doesn't Match !"})
+            branch = Branch.objects.all()
+            return render(request , 'registration/FacultyRegistration.html' , {'error' : "Password doesn't Match !" , "branchs" : branch})
     else:
-        return render(request,'registration/FacultyRegistration.html')
+        branch = Branch.objects.all()
+        return render(request,'registration/FacultyRegistration.html',{"branchs":branch})
+
+
+def StudentRegistration(request):
+    if request.method == "POST":
+        if request.POST['pass'] == request.POST['passwordagain']:
+            try:
+                user = User.objects.get(username = request.POST['uname'])
+                return render(request, 'registration/StudentRegistration.html',{'error':"Username already exists"})
+                student = Student.objects.get( code = request.POST['rollnumber'])
+                return render(request, 'registration/FacultyRegistration.html',{'error':"Rollnumber already exists"})
+            except User.DoesNotExist:
+                user = User.objects.create_user(username = request.POST['uname'] , password=request.POST['pass'] ,first_name =request.POST['firstName'],last_name = request.POST['lastName'],email=request.POST['email'] )
+                year = request.POST['studentYear']
+                year = StudyYear.objects.get(year = year)
+                branchName = request.POST['studentBranch']
+                branch = Branch.objects.get(name = branchName)
+                rollnumber = request.POST['rollnumber']
+                newStudent = Student(user= user ,branch = branch ,year = year , rollnumber = rollnumber )
+                newStudent.save()
+                # login(user)
+                return render(request ,'registration/StudentRegistration.html' , {'message' : "Registration succesful please login !"})
+        else:
+            branch = Branch.objects.all()
+            year = StudyYear.objects.all()
+            return render(request , 'registration/StudentRegistration.html' , {'error' : "Password doesn't Match !" , "branchs" : branch,"years":year})
+    else:
+        branch = Branch.objects.all()
+        year = StudyYear.objects.all()
+        return render(request,'registration/StudentRegistration.html',{"branchs":branch,"years":year})
+
 
 from django.views import generic
 class QuestionListView(generic.ListView):
@@ -280,6 +320,20 @@ class QuestionDeleteView(DeleteView):
     def get_success_url(self):
         return reverse_lazy('assignment_detail', kwargs={'pk': self.object.assignment_id})
 
+def getSubmittedAnswer(request , id):
+    question = get_object_or_404(Question, pk=id)
+    answers = Answer.objects.filter(question = question , status = 'Published')
+    return render(request, 'Faculty_Dashboard/submitted_answers.html', {'question': question, 'answers':answers })
+
+def rejectAnswer(request , qid,ansID ):
+    question = get_object_or_404(Question, pk=qid)
+    answers = Answer.objects.filter(question = question , status = 'Published')
+    answer = get_object_or_404(Answer , pk =ansID)
+    answer.status = 'Draft'
+    answer.save()
+    return render(request, 'Faculty_Dashboard/submitted_answers.html', {'question': question, 'answers':answers })
+
+
 
 
 ############# Student Dashboard ######################################################################################################################
@@ -316,6 +370,11 @@ class StudentCourseDetailView(generic.DetailView):
 class StudentAssignmentDetailView(generic.DetailView):
     model = Assignment
     template_name = "Student_Dashboard/assignment_detail.html"
+    def get_context_data(self, **kwargs):
+        context = super(StudentAssignmentDetailView, self).get_context_data(**kwargs)
+        answers = Answer.objects.filter(username = self.request.user)
+        context['answers'] = answers
+        return context
 
 from .forms import AddAssignmentAnswerForm
 def AnswerCreate(request, pk):
@@ -346,3 +405,45 @@ def getAnswer(request,pk,apk):
 # class StudentQuestionDetailView(generic.DetailView):
 #     model = Question
 #     template_name = "Student_Dashboard/question_detail.html"
+
+class StudentAddAnswer(CreateView):
+    model = Answer
+    template_name = 'Student_Dashboard/add_answer.html'
+    form_class = AddAssignmentAnswerForm
+    def get_context_data(self, **kwargs):
+        context = super(StudentAddAnswer, self).get_context_data(**kwargs)
+        assignment = Assignment.objects.get(pk = self.kwargs['pk'])
+        context['ck']=assignment.course_id
+        context['pk'] = self.kwargs['pk']
+        return context
+
+    def form_valid(self, form):
+        username = User.objects.get(username=self.request.user)
+        form.instance.username = username
+        question = Question.objects.get(pk=self.kwargs['qpk'])
+        form.instance.question = question
+        return super(StudentAddAnswer, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('student_assignment_detail' ,kwargs={'pk': self.kwargs['pk']})
+
+class StudentUpdateAnswer(UpdateView):
+    model = Answer
+    form_class = AddAssignmentAnswerForm
+    template_name = 'Student_Dashboard/add_answer.html'
+    def get_context_data(self, **kwargs):
+        context = super(StudentUpdateAnswer, self).get_context_data(**kwargs)
+        assignment = Assignment.objects.get(pk = self.kwargs['pk'])
+        context['ck']=assignment.course_id
+        context['pk'] = self.kwargs['pk']
+        return context
+
+    def form_valid(self, form):
+        username = User.objects.get(username=self.request.user)
+        form.instance.username = username
+        question = Question.objects.get(pk=self.kwargs['qpk'])
+        form.instance.question = question
+        return super(StudentAddAnswer, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('student_assignment_detail' ,kwargs={'pk': self.kwargs['pk']})

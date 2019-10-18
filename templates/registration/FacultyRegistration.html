@@ -23,9 +23,10 @@
 
   <div class="container">
     <div class="card card-register mx-auto mt-5">
-      <div class="card-header">Register an Account</div>
+      <div class="card-header">Faculty Registration</div>
       <div class="card-body">
-        <form action="{% url 'FacultyRegistration'}" method = "post">
+        <p> {% if message %} {{message}} <a href="{% url 'login' %}">login </a>{% endif %}</p>
+        <form action="" method = "post">
           {% csrf_token %}
           <div class="form-group">
             <div class="form-row">
@@ -45,24 +46,32 @@
           </div>
           <div class="form-group">
             <div class="form-label-group">
-              <input name="uname" type="email" id="inputEmail" class="form-control" placeholder="Username" required="required">
-              <label for="inputEmail">Username</label>
+              <input name="uname" type="text" id="inputUsername" class="form-control" placeholder="Username" required="required">
+              <label for="inputUsername">Username</label>
             </div>
           </div>
           <div class="form-group">
             <div class="form-label-group">
-              <input name="Email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required="required">
+              <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required="required">
               <label for="inputEmail">Email address</label>
             </div>
           </div>
+
+
+
           <div class="form-group">
             <div class="form-row">
               <div class="col-md-6">
                   <div class="form-label-group">
-                    <input name="Branch" type="text" id="inputBranch" class="form-control" placeholder="Branch" required="required">
-                    <label for="inputBranch">Branch</label>
+                    <select id="inputFacultyBranch" name="FacultyBranch" class="form-control">
+                      <option value="" selected>Please select a Branch</option>
+                      {% for branch in branchs %}
+                      <option value="{{ branch }}">{{ branch }}</option>
+                      {% endfor %}
+                    </select>
                   </div>
                 </div>
+
                   <div class="col-md-6">
                       <div class="form-label-group">
                         <input name="FacultyCode" type="text" id="inputFacultyCode" class="form-control" placeholder="Faculty Code" required="required">
@@ -87,11 +96,11 @@
               </div>
             </div>
           </div>
-          <a class="btn btn-primary btn-block" href="login.html">Register</a>
+          <input class="btn btn-primary btn-block" type="submit" value="Register">
         </form>
         <div class="text-center">
-          <a class="d-block small mt-3" href="login.html">Login Page</a>
-          <a class="d-block small" href="forgot-password.html">Forgot Password?</a>
+          <a class="d-block small mt-3" href="{% url 'login' %}">Login Page</a>
+
         </div>
       </div>
     </div>

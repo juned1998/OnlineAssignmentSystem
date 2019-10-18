@@ -85,7 +85,7 @@ class Answer(models.Model):
     STATUS = [('Draft','Draft'),('Published','Published')]
     question = models.ForeignKey(Question,on_delete = models.CASCADE)
     answer_txt = models.TextField()
-    date = models.DateTimeField()
+    date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=12,choices=STATUS,default='Draft')
     username = models.ForeignKey(User,on_delete = models.SET_NULL,null=True)
 

@@ -2,7 +2,7 @@
 
 {% block breadcrumb%}
 <li class="breadcrumb-item "><a href="{% url 'ViewAssignment' %}"> All Assignments</a></li>
-<li class="breadcrumb-item "><a href="{% url 'course_detail' assignment.course_id %}">Course Specific</a></li>
+<li class="breadcrumb-item "><a href="{% url 'course_detail' assignment.course_id %}">Course Specific Assignments</a></li>
 <li class="breadcrumb-item active">Question list</li>
 {%endblock%}
 
@@ -31,7 +31,7 @@
           <td>{{ question.marks }}</td>
           <td> <a href="{% url 'UpdateQuestion'  assignment.id question.id %}">Edit</a> </td>
           <td> <a onclick="return confirm('Are you sure?');" href="{% url 'DeleteQuestion'  assignment_pk=assignment.id pk=question.id %}">Delete</a></td>
-          <td> <a href="#">View all answers</a></td>
+          <td> <a href="{% url 'AllSubmittedAnswers' question.id %}">View all answers</a></td>
         </tr>
       {% endfor %}
       </tbody>

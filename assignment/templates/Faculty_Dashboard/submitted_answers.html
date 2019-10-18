@@ -1,0 +1,50 @@
+{% extends "./base.html" %}
+
+{% block breadcrumb%}
+<li class="breadcrumb-item "><a href="{% url 'ViewAssignment' %}"> All Assignments</a></li>
+<li class="breadcrumb-item "><a href="{% url 'course_detail' question.assignment.course_id %}">Course Specific</a></li>
+<li class="breadcrumb-item "><a href="{% url 'assignment_detail' question.assignment.id %}">Question list</a></li>
+<li class="breadcrumb-item active">All Submitted Answers</li>
+{%endblock%}
+
+{% block content %}
+<h1> QUESTION: {{question }}</h1>
+
+
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Questions</h4>
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Roll Number</th>
+          <th scope="col">Name</th>
+          <th scope="col">Date</th>
+          <th scope="col">Answer</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for answer in answers %}
+        <tr>
+          <td>{{ answer.username.student.rollnumber}}</td>
+          <td>{{ answer.username.first_name}} {{ answer.username.last_name}}</td>
+          <td>{{ answer.date}}</td>
+          <td>{{answer.answer_txt}}</td>
+          <td><a class="btn btn-warning" href="{% url 'RejectAnswer' qid=question.id  ansID=answer.id  %}">Reject</a></td>
+
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+
+
+
+
+
+
+{% endblock %}
+{% block script %}
+
+{% endblock %}

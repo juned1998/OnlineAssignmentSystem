@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     #path('',views.index,name='home')
     path('FacultyRegistration/',views.FacultyRegistration,name='FacultyRegistration'),
+    path('StudentRegistration/',views.StudentRegistration,name='StudentRegistration'),
     path('',views.QuestionListView.as_view(),name='index'),
     path('FacultyDashboard',views.FacultyDashboard,name='FacultyDashboard'),
     path('question/<int:pk>', views.QuestionDetailView.as_view(), name='question-detail'),
@@ -23,6 +24,8 @@ urlpatterns = [
     path('<int:pk>/createQuestion/', views.QuestionCreate, name='CreateQuestion'),
     path('<int:assignment_pk>/UpdateQuestion/<int:question_pk>', views.QuestionUpdate, name='UpdateQuestion'),
     path('<int:assignment_pk>/DeleteQuestion/<int:pk>/delete', views.QuestionDeleteView.as_view(), name='DeleteQuestion'),
+    path('submittedAnswers/<int:id>', views.getSubmittedAnswer, name='AllSubmittedAnswers'),
+    path('rejectAnswer/<int:qid>/<int:ansID>', views.rejectAnswer, name='RejectAnswer'),
 ]
 
 
@@ -33,8 +36,10 @@ urlpatterns += [
     path('student_assigment_list/',views.StudentAssignmentListView.as_view(),name='AllAssignment'),
     path('student_course/<int:pk>', views.StudentCourseDetailView.as_view(), name='student_course_detail'),
     path('student_assignment/<int:pk>/', views.StudentAssignmentDetailView.as_view(), name='student_assignment_detail'),
-    path('<int:pk>/createAnswer/', views.AnswerCreate, name='CreateAnswer'),
-    path('<int:apk>/student_answer/<int:pk>/', views.getAnswer ,name='student_answer'),
+    path('<int:pk>/<int:qpk>/addAnswer/',views.StudentAddAnswer.as_view(),name ='StudentAddAnswer'),
+    path('<int:pk>/<int:qpk>/UpdateAnswer/<int:ak>',views.StudentUpdateAnswer.as_view(),name ='StudentUpdateAnswer'),
+    # path('<int:pk>/createAnswer/', views.AnswerCreate, name='CreateAnswer'),
+    # path('<int:apk>/student_answer/<int:pk>/', views.getAnswer ,name='student_answer'),
     # path('student_answer/<int:pk>/', views.StudentAnswerDetailView.as_view(), name='student_answer_detail'),
     # path('student_question/<int:pk>/', views.StudentQuestionDetailView.as_view(), name='student_question_detail'),
 ]
