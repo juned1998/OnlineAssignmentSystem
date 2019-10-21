@@ -10,7 +10,7 @@
   <h1>Course:{{assignment.course }}</h1>
 
   <p><strong>Assignment:</strong> {{ assignment.number }}</p>
-  <p><strong>publish_date:</strong> {{ assignment.publish_date }}</p>
+  <p><strong>publish date:</strong> {{ assignment.publish_date }}</p>
   <p><strong>deadline:</strong> {{assignment.deadline_date}}</p>
   <div style="margin-left:20px;margin-top:20px">
     <h4>Questions</h4>
@@ -22,16 +22,33 @@
           <th scope="col">Question Marks</th>
           <th scope="col">Write Answer</th>
           <th scope="col">Answer Status</th>
+          <th scope="col">View Answer</th>
         </tr>
       </thead>
       <tbody>
         {% for question in assignment.question_set.all %}
-        <tr>
-          <td>{{ question.title }}</td>
-          <td>{{ question.marks }}</td>
-          <td></td>
-        </tr>
 
+
+        <tr>
+          <td style="font-family : serif;" >{{ question.title }}</td>
+          <td>{{ question.marks }}</td>
+
+
+          <td><a class="btn btn-primary"  href="{% url 'CreateAnswer' pk=question.id %}" >Add Answer</a></td>
+          {% for answer in answers %}
+          {% ifequal  answer.question question %}
+          <td>{{answer.status}}</td>
+          <td><a class="btn btn-primary"  href="{% url 'student_answer' apk=assignment.id pk=question.id %}">View Answer</a></td>
+          {% endifequal %}
+          {% endfor %}
+
+
+
+
+
+
+
+        </tr>
 
       {% endfor %}
       </tbody>

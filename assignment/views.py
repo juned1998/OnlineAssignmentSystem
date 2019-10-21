@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,HttpResponse
 from .models import Student, Faculty, Assignment, Question , Answer , StudyYear, Semester , Branch , Course
 from django.contrib.auth.decorators import login_required
 from .forms import ExtendedUserCreationForm,StudentSignUpForm,FacultySignUpForm
@@ -379,17 +379,21 @@ class StudentAssignmentDetailView(generic.DetailView):
 from .forms import AddAssignmentAnswerForm
 def AnswerCreate(request, pk):
     question = get_object_or_404(Question, pk=pk)
+    user_answer = Answer.objects.filter(question = question, username = request.user).first()
     if request.method == 'POST':
         form = AddAssignmentAnswerForm(request.POST)
+
         if form.is_valid():
-            answer = form.save(commit=False)
-            answer.username = request.user
-            answer.question = question
-            answer.save()
+            answer = request.POST['answer_txt']
+            userAnswer, created = Answer.objects.get_or_create(username=request.user, question = question )
+            userAnswer.answer_txt = answer
+            userAnswer.save()
             return redirect('student_assignment_detail', question.assignment.id)
+    elif user_answer:
+        form = AddAssignmentAnswerForm(instance = user_answer)
     else:
         form = AddAssignmentAnswerForm()
-    return render(request, 'Student_Dashboard/add_answer.html', {'question': question, 'form': form ,'pk': question.assignment.id  })
+    return render(request, 'Student_Dashboard/add_answer.html', {'question': question, 'form': form ,'pk': question.assignment.id , 'cpk': question.assignment.course.id  })
 
 def getAnswer(request,pk,apk):
     assignment = get_object_or_404(Assignment,pk=apk)
@@ -405,45 +409,3 @@ def getAnswer(request,pk,apk):
 # class StudentQuestionDetailView(generic.DetailView):
 #     model = Question
 #     template_name = "Student_Dashboard/question_detail.html"
-
-class StudentAddAnswer(CreateView):
-    model = Answer
-    template_name = 'Student_Dashboard/add_answer.html'
-    form_class = AddAssignmentAnswerForm
-    def get_context_data(self, **kwargs):
-        context = super(StudentAddAnswer, self).get_context_data(**kwargs)
-        assignment = Assignment.objects.get(pk = self.kwargs['pk'])
-        context['ck']=assignment.course_id
-        context['pk'] = self.kwargs['pk']
-        return context
-
-    def form_valid(self, form):
-        username = User.objects.get(username=self.request.user)
-        form.instance.username = username
-        question = Question.objects.get(pk=self.kwargs['qpk'])
-        form.instance.question = question
-        return super(StudentAddAnswer, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse('student_assignment_detail' ,kwargs={'pk': self.kwargs['pk']})
-
-class StudentUpdateAnswer(UpdateView):
-    model = Answer
-    form_class = AddAssignmentAnswerForm
-    template_name = 'Student_Dashboard/add_answer.html'
-    def get_context_data(self, **kwargs):
-        context = super(StudentUpdateAnswer, self).get_context_data(**kwargs)
-        assignment = Assignment.objects.get(pk = self.kwargs['pk'])
-        context['ck']=assignment.course_id
-        context['pk'] = self.kwargs['pk']
-        return context
-
-    def form_valid(self, form):
-        username = User.objects.get(username=self.request.user)
-        form.instance.username = username
-        question = Question.objects.get(pk=self.kwargs['qpk'])
-        form.instance.question = question
-        return super(StudentAddAnswer, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse('student_assignment_detail' ,kwargs={'pk': self.kwargs['pk']})

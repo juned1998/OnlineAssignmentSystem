@@ -8,11 +8,17 @@
 {%endblock%}
 
 {% block content %}
-{% if answer %}
-  <h1>Question :{{question}}</h1>
-  <p>{{answer.answer_txt}}</p>
+
+  {% if answer %}
+  <div class="container">
+    <h1 class="mx-2" style="font-family : serif;" >Q:{{question}}</h1>
+    <hr>
+    <h5><b>Your answer :</b></h5>
+
+    <p class="mx-4 overflow-auto">{{answer.answer_txt}}</p>
+
     {% else %}
-      <p>There are no answers added yet !</p>
+        <p class="mx-4">There is no answer added yet for this question !</p>
     {% endif %}
 
   </div>

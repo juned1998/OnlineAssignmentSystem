@@ -1,38 +1,51 @@
 {% extends "index_base.html" %}
 {% block title %} Assignment : Home {%endblock%}
 {% block content %}
-<div class="">
+<div class="row">
 
-  <div class="row">
-    <div class="col-md-3">
+<div class="col-md-4">
+
+
+   <div class="mx-4 my-3 category  ">
+      <h5 class="align-top">Filter Question</h5>
+      <form>
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">Example select</label>
+          <select class="form-control" id="exampleFormControlSelect1">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+        </div>
+      </form>
     </div>
-    <div class="Qbox col-md-6 mx-3 my-3">
+    <!-- <div class="Qbox col-md-6 mx-3 my-3">
       <form>
       <textarea name="name" rows="1" cols="60" style = "resize : none;  padding:1px;" placeholder="Ask Question.." ></textarea>
       <button type="button" class="btn btn-primary searchButton" >Search</button>
       </form>
-    </div>
-  </div>
+    </div> -->
+</div>
+<div class="col-md-8">
   {% if question_list %}
 
     {% for question in question_list %}
-    <div class="row">
-      <div class = "col-md-3">
-      </div>
-      <div class = "Qbox col-md-6 my-3 mx-3 " style = "border : solid 1px #ddd">
-        <h6 class="mx-3 my-3" >{{question.assignment.course}} | Assignment no.{{question.assignment.number}}</h6>
-        <h3 style=" "> {{question.title}}</h3>
 
-        <a href="{{ question.get_absolute_url }}" class="mx-3 my-1 viewAnswers" > view all {{ question.answer.all.count }} answers</a>
+      <div class = "Qbox col-md-10 my-3 " style = "border : solid 1px #ddd">
+        <h6 class="my-3 question-details" >{{question.assignment.course}} | Assignment no.{{question.assignment.number}}</h6>
+        <h3 style="font-family : serif ;"> {{question.title}}</h3>
+
+        <a href="{{ question.get_absolute_url }}" class=" my-1 viewAnswers" > view all {{ question.answer_set.count }} answers</a>
       </div>
-      <div class = "col-md-3">
-      </div>
-    </div>
+
+
     {% endfor %}
 
   {% else %}
     <p>There are no questions.</p>
   {% endif %}
-
-
+</div>
+</div>
 {% endblock %}

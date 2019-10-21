@@ -2,16 +2,17 @@
 
 {% block breadcrumb%}
 <li class="breadcrumb-item "><a href="{% url 'AllAssignment' %}">Assignments</a></li>
-<li class="breadcrumb-item "><a href="{% url 'student_course_detail' ck %}">Course Specific</a></li>
+<li class="breadcrumb-item "><a href="{% url 'student_course_detail' cpk %}">Course Specific</a></li>
 <li class="breadcrumb-item"><a href="{% url 'student_assignment_detail' pk %}">Question list</a></li>
-<li class="breadcrumb-item active">Add Answer</li>
+<li class="breadcrumb-item active">Your Answer</li>
 {%endblock%}
 
 {% load widget_tweaks %}
 
 {% block content %}
+
 <h3>{{question.title}}</h3>
-  <h2>Add Answer</h2>
+  <h2>Your Answer</h2>
   <form method="post">
     {% csrf_token %}
 
