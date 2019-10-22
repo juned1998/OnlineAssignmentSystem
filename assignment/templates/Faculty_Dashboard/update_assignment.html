@@ -1,15 +1,17 @@
-{% extends './base.html' %}
+{% extends "./base.html" %}
 
 {% block breadcrumb%}
-<li class="breadcrumb-item "><a href="{% url 'ViewAssignment' %}">Assignments</a></li>
-<li class="breadcrumb-item"><a href="{% url 'assignment_detail' pk %}">Question list</a></li>
-<li class="breadcrumb-item active">Add Question</li>
+<li class="breadcrumb-item "><a href="{% url 'ViewAssignment' %}"> All Assignments</a></li>
+<li class="breadcrumb-item "><a href="{% url 'ViewCourse' %}">All Course</a></li>
+<li class="breadcrumb-item "><a href="{% url 'course_detail' assignment.course_id %}">Course Specific Assignments</a></li>
+<li class="breadcrumb-item active">Update Assignment</li>
 {%endblock%}
+
 
 {% load widget_tweaks %}
 
 {% block content %}
-  <h2>Add Question</h2>
+  <h2>Update Assignment</h2>
   <form method="post">
     {% csrf_token %}
 
@@ -20,8 +22,7 @@
     {% for field in form.visible_fields %}
       <div class="form-group">
         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {{ field|add_class:'form-control'}}
-      
+        {{ field|add_class:'form-control' }}
         {% for error in field.errors %}
           <span class="help-block">{{ error }}</span>
         {% endfor %}

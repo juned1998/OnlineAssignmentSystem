@@ -6,13 +6,19 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
+from django.db.models import Count
 # Create your views here.
 def index(request):
-    return  render(request , 'index.html')
+    years  = StudyYear.objects.all()
+    branchs= Branch.objects.all()
+    return  render(request , 'index.html', {'years':year , 'branchs':branchs} )
+
+
 
 @login_required
 def FacultyDashboard(request):
     return render(request , 'Faculty_Dashboard/index.html')
+
 
 
 def FacultyRegistration(request):
@@ -74,12 +80,23 @@ class QuestionListView(generic.ListView):
     model = Question
     template_name = 'index.html'
     paginate_by = 10
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['branchs'] = Branch.objects.all()
+        context['years'] = StudyYear.objects.all()
+        context['courses']=Course.objects.all()
+        return context
     def get_queryset(self):
         return Question.objects.order_by('-date')
 
 
-class QuestionDetailView(generic.DetailView):
+class RepoQuestionDetailView(generic.DetailView):
     model = Question
+    template_name = "questionAllAnswers.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['answers'] = self.object.answer_set.all().annotate(count=Count('upvotes')).order_by('-count')
+        return context
 
 def login(request):
     return render(request , 'login.html')
@@ -215,7 +232,7 @@ class AssignmentCreate(CreateView):
 class AssigmentUpdate(UpdateView):
     model = Assignment
     form_class = CreateAssignmentForm
-    template_name = 'Faculty_Dashboard/add_assignment.html'
+    template_name = 'Faculty_Dashboard/update_assignment.html'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -385,8 +402,10 @@ def AnswerCreate(request, pk):
 
         if form.is_valid():
             answer = request.POST['answer_txt']
+            status = request.POST['status']
             userAnswer, created = Answer.objects.get_or_create(username=request.user, question = question )
             userAnswer.answer_txt = answer
+            userAnswer.status = status
             userAnswer.save()
             return redirect('student_assignment_detail', question.assignment.id)
     elif user_answer:

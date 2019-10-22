@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from bootstrap_modal_forms.forms import BSModalForm
 
+
 # class UserRegisterForm(UserCreationForm):
 #     email = forms.EmailField()
 #
@@ -72,6 +73,7 @@ class CreateAssignmentForm(forms.ModelForm):
         model = Assignment
         fields = ('number', 'course', 'deadline_date')
 
+
 class AddAssignmentQuestionForm(forms.ModelForm):
     class Meta:
         model = Question
@@ -80,4 +82,4 @@ class AddAssignmentQuestionForm(forms.ModelForm):
 class AddAssignmentAnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
-        exclude = ['username','assignment','question']
+        exclude = ['username','assignment','question','upvotes']

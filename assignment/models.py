@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+
 # Create your models here.
 #if hasattr(self, 'student'):
 
@@ -79,7 +80,10 @@ class Question(models.Model):
 
     def get_absolute_url(self):
         """Returns the url to access a detail record for this book."""
-        return reverse('question-detail', args=[str(self.id)])
+        return reverse('repo-question-detail', args=[str(self.id)])
+
+    def getPublishedAnswerCount(self):
+        return self.answer_set.filter(status = 'Published').count()
 
 class Answer(models.Model):
     STATUS = [('Draft','Draft'),('Published','Published')]
@@ -88,6 +92,10 @@ class Answer(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=12,choices=STATUS,default='Draft')
     username = models.ForeignKey(User,on_delete = models.SET_NULL,null=True)
+    upvotes = models.ManyToManyField(User , related_name = 'Upvotes' , blank=True)
 
     def __str__(self):
         return f'{self.question.title} by {self.username.first_name}'
+
+    def upvotesCount(self):
+        return self.upvotes.count()

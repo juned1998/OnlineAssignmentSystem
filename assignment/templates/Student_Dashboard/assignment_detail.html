@@ -34,7 +34,7 @@
           <td>{{ question.marks }}</td>
 
 
-          <td><a class="btn btn-primary"  href="{% url 'CreateAnswer' pk=question.id %}" >Add Answer</a></td>
+          <td><a class="btn btn-primary"  href="{% url 'CreateAnswer' pk=question.id %}" >Your Answer</a></td>
           {% for answer in answers %}
           {% ifequal  answer.question question %}
           <td>{{answer.status}}</td>

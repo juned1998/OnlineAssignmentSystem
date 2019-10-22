@@ -1,0 +1,70 @@
+{% extends "index_base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 my-3" style="padding : 5px;">
+      <div style="background-color: #f0f0f0 ; padding:20px;">
+        <h1 style="font-family : serif;"><b>Q.{{question.title}}</b></h1>
+        {% if question.description %}
+        {{question.description}}
+        {% else %}
+        <p>No description available .</p>
+        {% endif %}
+        <div class="QuestionInfo">
+          <ul class="list-group list-group-flush">
+            <h4>Question info</h4>
+            <li class="list-group-item"><b>Course   : </b>{{question.assignment.course.name}}</li>
+            <li class="list-group-item"><b>Year     : </b>{{question.assignment.course.year}}</li>
+            <li class="list-group-item"><b>Branch   : </b>{{question.assignment.course.branch}}</li>
+            <li class="list-group-item"><b>Semester : </b>{{question.assignment.course.semester}}</li>
+            <li class="list-group-item"><b>Marks    : </b>{{question.marks}}</li>
+          </ul>
+        </div>
+      </div>
+
+
+      <h3 class="my-2">All Answers:</h3>
+      {% if answers %}
+
+      {% for answer in answers %}
+      {% ifequal answer.status 'Published' %}
+      <div class="userAnswerBox">
+          <div class="userDetails">
+            <img class="UserPic" src="{% static 'images/avtar.png' %}">
+            <span>{{answer.username.first_name}} {{answer.username.last_name}} , </span>
+            <span>studying in {{answer.username.student.year}} , {{answer.username.student.branch}} </span>
+          <p class="answerDate">answer added on {{answer.date}} </p>
+          </div>
+
+          <div class="userAnswer">
+            {{answer.answer_txt}}
+          </div>
+
+          <div class="ratingButton">
+              <span class=""><a class="btn btn-light upvote" style="Color:blue;" href="#">Upvote | {{answer.upvotesCount}}</a><span>
+          </div>
+
+      </div>
+      {% endifequal %}
+      {% endfor %}
+
+      {% else %}
+      <h4>No answers added yet !</h4>
+      {% endif %}
+
+
+
+
+
+
+
+
+
+    </div>
+    <div class="col-md-3 mx-2 my-3" style="padding : 10px;">
+      <h5>Related Questions</h5>
+    </div>
+</div>
+</div>
+{% endblock %}
