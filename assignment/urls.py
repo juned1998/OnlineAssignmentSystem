@@ -4,6 +4,7 @@ from . import views
 #faculty dashboard
 urlpatterns = [
     #path('',views.index,name='home')
+    path('filter/',views.filter,name="FilterQuestions"),
     path('FacultyRegistration/',views.FacultyRegistration,name='FacultyRegistration'),
     path('StudentRegistration/',views.StudentRegistration,name='StudentRegistration'),
     path('',views.QuestionListView.as_view(),name='index'),
@@ -26,6 +27,10 @@ urlpatterns = [
     path('<int:assignment_pk>/DeleteQuestion/<int:pk>/delete', views.QuestionDeleteView.as_view(), name='DeleteQuestion'),
     path('submittedAnswers/<int:id>', views.getSubmittedAnswer, name='AllSubmittedAnswers'),
     path('rejectAnswer/<int:qid>/<int:ansID>', views.rejectAnswer, name='RejectAnswer'),
+    path('addQuestionBank/',views.questionBank,name='QuestionBank'),
+    # path('addQuestionBank/brand/<int:pk>/all_json_models/',views.all_json_models),\
+    path('addQuestionBank/selectedCourse/<int:id>/all_json_assignments',views.all_json_models),
+    path('addQuestionBank/getQuestions/',views.generateQB, name='GetQuestions')
 ]
 
 

@@ -1,0 +1,94 @@
+{% extends "./base.html" %}
+{% block breadcrumb%}
+<li class="breadcrumb-item active">Add Question Bank</li>
+{%endblock%}
+
+{% block content %}
+<div class="col-md-8" style="margin-bottom:5px;">
+<form method="get" action="{% url 'GetQuestions' %}">
+  <div class="form-group">
+    <label for="exampleFormControlInput1">Question Bank Title</label>
+    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Ex. Question Bank for UT-1">
+  </div>
+  <div class="form-group">
+    <label >Course</label>
+    <select class="form-control" name="course" id="course">
+      <option  value="Z">Select a course</option>
+      {% for course in courses %}
+      <option value="{{course.id}}">{{course}}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="assignment">Select Assigment(s)</label>
+    <select multiple size="5" class="form-control" id="assignment" name="assignment" disabled="true" placeholder="hold ctrl to select multiple assignment">
+      <option disabled>hold ctrl to (de)select multiple assignment</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="exampleFormControlInput1">Enter maximum number of questions</label>
+    <input type="integer" class="form-control" id="exampleFormControlInput1" placeholder="Ex. 10">
+  </div>
+
+
+  <button type="submit" class="submit-btn btn btn-primary">Generate</button>
+
+</form>
+</div>
+
+{% if question_list %}
+<table class="table">
+  <thead class="thead-light">
+    <td scope="col">Question</td>
+    <td scope="col">Assigment</td>
+    <td scope="col">Edit</td>
+  </thead>
+  {% for question in question_list %}
+  <tr>
+    <td>{{question.title}}</td>
+    <td>{{question.assignment}}</td>
+    <td>edit</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+$(document).ready(
+function() {
+$("select#course").change(function() {
+if ($(this).val() == 'Z') {
+$("select#assignment").html("<option>Select Assignment(s)</option>");
+$("select#assignment").attr('disabled', true);
+}
+else {
+var url = "selectedCourse/" + $(this).val() + "/all_json_assignments";
+var brand = $(this).val();
+$.getJSON(url, function(assignments) {
+  var options = '<option disabled value="Z">Select Assignment(s)-Hold CTRL and select multiple assignment</option>';
+    for (var i = 0; i < assignments.length; i++) {
+    options += '<option value="' + assignments[i].pk + '">' + assignments[i].fields['number'] + '</option>';
+    }
+  $("select#assignment").html(options);
+  $("select#assignment option:first").attr('selected', 'selected');
+  $("select#assignment").attr('disabled', false);
+});
+}
+});
+
+
+$("select#assignment").change(function(vent) {
+if ($(this).val() == -1) {
+return;
+}
+// myAwesomeFunctionToCallWhenAModelIsSelected();
+});
+});
+
+
+</script>
+{% endblock %}

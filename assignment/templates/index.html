@@ -8,10 +8,10 @@
 
    <div class="mx-4 my-3 category  ">
       <h5 class="align-top">Filter Question</h5>
-      <form>
+      <form div="filterForm" method="GET" action="{%url 'FilterQuestions' %}">
         <div class="form-group">
 
-          <select class="form-control" id="filterYear">
+          <select name="yearfilter" class="form-control" id="filterYear">
             <option value="">Select Year</option>
             {% for year in years %}
 
@@ -23,7 +23,7 @@
 
         <div class="form-group">
 
-          <select class="form-control" id="filterBranch">
+          <select name="branchfilter" class="form-control" id="filterBranch">
             <option value="">Select Branch</option>
             {% for branch in  branchs %}
             <option value="{{branch}}">{{branch}}</option>
@@ -33,14 +33,15 @@
 
         <div class="form-group">
 
-          <select class="form-control" id="exampleFormControlSelect1">
+          <select name="coursefilter" class="form-control" id="courseField">
             <option value="">Select Course</option>
             {% for course in  courses %}
             <option value="{{course}}">{{course}}</option>
             {% endfor %}
           </select>
         </div>
-        <a class="btn btn-info" href="#" type="submit" >Filter</a>
+        <input class="btn btn-info" type="submit" value="">
+        <!-- <a class="btn btn-info" href="#" type="submit" >Filter</a> -->
       </form>
     </div>
     <!-- <div class="Qbox col-md-6 mx-3 my-3">
@@ -69,4 +70,23 @@
   {% endif %}
 </div>
 </div>
+<script>
+   $("#filterForm").change(function () {
+     var url = $("#filterForm").attr("subject-url");  // get the url of the `load_subject` view
+     var branchId = $(this).val();  // get the selected country ID from the HTML input
+
+     $.ajax({                       // initialize an AJAX request
+       url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+       data: {
+         'branch': branchId\
+         'branch': branchId        // add the country id to the GET parameters
+       },
+       success: function (data) {   // `data` is the return of the `load_cities` view function
+         $("#courseField").html(data);  // replace the contents of the city input with the data that came from the server
+       }
+     });
+
+   });
+</script>
+
 {% endblock %}

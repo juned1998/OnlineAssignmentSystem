@@ -7,11 +7,23 @@ from django.urls import reverse
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.db.models import Count
+from django.core import serializers
 # Create your views here.
 def index(request):
     years  = StudyYear.objects.all()
     branchs= Branch.objects.all()
     return  render(request , 'index.html', {'years':year , 'branchs':branchs} )
+
+def filter(request):
+    if(request.method=="GET"):
+        branch = request.GET['branchfilter']
+        year = request.GET['yearfilter']
+        course = request.GET['coursefilter']
+
+        course = Course.objects.filter(name=course,branch=branch,year=year)
+        assignemnt=Assignemnt.objects.filter(course=course)
+        questions=Question.objects.filter(assignment=assignemnt)
+        return render(request,"index.html",{'question_list':questions})
 
 
 
@@ -350,7 +362,27 @@ def rejectAnswer(request , qid,ansID ):
     answer.save()
     return render(request, 'Faculty_Dashboard/submitted_answers.html', {'question': question, 'answers':answers })
 
+def questionBank(request):
+    faculty = Faculty.objects.get(user=request.user)
+    courses  = Course.objects.filter(faculty=faculty)
+    return  render(request , 'Faculty_Dashboard/question_bank.html', {'courses':courses})
 
+def all_json_models(request, id):
+    course = Course.objects.get(id=id)
+    assignments = Assignment.objects.all().filter(course=course)
+    json_models = serializers.serialize("json", assignments)
+    return HttpResponse(json_models, content_type="application/javascript")
+
+def generateQB(request):
+    if(request.method=="GET"):
+        course = request.GET['course']
+        assignmentList = request.GET.getlist('assignment')
+        course = Course.objects.get(id=course)
+        assignment=Assignment.objects.filter(course=course,id__in=assignmentList)
+        questions=Question.objects.filter(assignment__in=assignment)
+        faculty = Faculty.objects.get(user=request.user)
+        courses  = Course.objects.filter(faculty=faculty)
+        return render(request,"Faculty_Dashboard/question_bank.html",{'question_list':questions,'courses': courses})
 
 
 ############# Student Dashboard ######################################################################################################################
