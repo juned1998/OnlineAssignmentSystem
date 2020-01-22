@@ -4,7 +4,7 @@
 {%endblock%}
 
 {% block content %}
-<div class="col-md-8" style="margin-bottom:5px;">
+<div class="col-md-8" style="margin-bottom:5px">
 <form method="get" action="{% url 'GetQuestions' %}">
   <div class="form-group">
     <label for="exampleFormControlInput1">Question Bank Title</label>
@@ -29,7 +29,7 @@
 
   <div class="form-group">
     <label for="exampleFormControlInput1">Enter maximum number of questions</label>
-    <input type="integer" class="form-control" id="exampleFormControlInput1" placeholder="Ex. 10">
+    <input required name="maxQuestions" type="integer" class="form-control" id="exampleFormControlInput1" placeholder="Ex. 10">
   </div>
 
 
@@ -66,7 +66,9 @@ $("select#assignment").html("<option>Select Assignment(s)</option>");
 $("select#assignment").attr('disabled', true);
 }
 else {
-var url = "selectedCourse/" + $(this).val() + "/all_json_assignments";
+// var url = "selectedCourse/" + $(this).val() + "/all_json_assignments";
+var id = parseInt($(this).val());
+var url = '{% url "SendCourse" id=999 %}'.replace('999',id);
 var brand = $(this).val();
 $.getJSON(url, function(assignments) {
   var options = '<option disabled value="Z">Select Assignment(s)-Hold CTRL and select multiple assignment</option>';

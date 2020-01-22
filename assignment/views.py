@@ -376,10 +376,12 @@ def all_json_models(request, id):
 def generateQB(request):
     if(request.method=="GET"):
         course = request.GET['course']
+        maxQuestions = request.GET['maxQuestions']
         assignmentList = request.GET.getlist('assignment')
+        print(maxQuestions)
         course = Course.objects.get(id=course)
         assignment=Assignment.objects.filter(course=course,id__in=assignmentList)
-        questions=Question.objects.filter(assignment__in=assignment)
+        questions=Question.objects.filter(assignment__in=assignment).order_by('?')[:int(maxQuestions)]
         faculty = Faculty.objects.get(user=request.user)
         courses  = Course.objects.filter(faculty=faculty)
         return render(request,"Faculty_Dashboard/question_bank.html",{'question_list':questions,'courses': courses})
