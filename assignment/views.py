@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.db.models import Count
 from django.core import serializers
+from assignment.utils import render_to_pdf
 # Create your views here.
 def index(request):
     years  = StudyYear.objects.all()
