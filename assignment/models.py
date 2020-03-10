@@ -73,6 +73,7 @@ class Question(models.Model):
     username = models.ForeignKey(User,on_delete=models.SET_NULL,blank=True,null=True)
     title = models.CharField(max_length = 200)
     description = models.TextField(blank=True , null = True)
+    modelAnswer = models.TextField(blank=True)
     marks = models.IntegerField(null=True)
     date = models.DateTimeField(auto_now_add=True)
     def __str__(self):

@@ -22,6 +22,7 @@
           <th scope="col">Edit Question</th>
           <th scope="col">Delete Question</th>
           <th scope="col">View Submitted Answers</th>
+          <th scope="col">Model Answer</th>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +33,7 @@
           <td> <a href="{% url 'UpdateQuestion'  assignment.id question.id %}">Edit</a> </td>
           <td> <a onclick="return confirm('Are you sure?');" href="{% url 'DeleteQuestion'  assignment_pk=assignment.id pk=question.id %}">Delete</a></td>
           <td> <a href="{% url 'AllSubmittedAnswers' question.id %}">View all answers</a></td>
+          <td><a href="{% url 'viewModelAnswer' question.id %}">Model Answer</a></td>
         </tr>
       {% endfor %}
       </tbody>

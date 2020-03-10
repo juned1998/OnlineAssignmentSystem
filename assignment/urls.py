@@ -30,7 +30,9 @@ urlpatterns = [
     path('addQuestionBank/',views.questionBank,name='QuestionBank'),
     # path('addQuestionBank/brand/<int:pk>/all_json_models/',views.all_json_models),\
     path('addQuestionBank/selectedCourse/<int:id>/all_json_assignments',views.all_json_models, name="SendCourse"),
-    path('addQuestionBank/getQuestions/',views.generateQB, name='GetQuestions')
+    path('addQuestionBank/getQuestions/',views.generateQB, name='GetQuestions'),
+    path('generateModelAnswer/<int:id>', views.generateModelAnswer, name='generateModelAnswer'),
+    path('modelAnswer/<int:id>', views.modelAnswer, name='viewModelAnswer')
 ]
 
 

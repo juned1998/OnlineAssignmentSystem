@@ -1,0 +1,15 @@
+{% extends "./base.html" %}
+{% block breadcrumb %}
+<li class="breadcrumb-item "><a href="{% url 'ViewAssignment' %}"> All Assignments</a></li>
+<li class="breadcrumb-item "><a href="{% url 'course_detail' question.assignment.course_id %}">Course Specific Assignments</a></li>
+<li class="breadcrumb-item active"><a href="{% url 'assignment_detail' question.assignment.id %}">Questions list</a></li>
+<li class="breadcrumb-item active">Model Answer</li>
+{% endblock %}
+
+{% block content %}
+<textarea name="modelAnswer" rows="15" cols="80">
+  {{modelAnswer}}
+</textarea>
+<br>
+<a onclick="return alert('fetching answer...');"  class="btn btn-primary" href="{% url 'generateModelAnswer' id %}">Generate Model Answer</a>
+{% endblock %}

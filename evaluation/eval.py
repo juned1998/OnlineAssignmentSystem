@@ -1,12 +1,8 @@
-
-try:
-    from googlesearch import search
-except ImportError:
-    print("No module named 'google' found")
+from googlesearch import search
 
 def getLinks(query):
     results = []
-    for j in search(query, tld="co.in", num=5, stop=3, pause=5):
+    for j in search(query, tld="co.in", num=1, stop=1, pause=5):
         print(j)
         results.append(j)
     return results
@@ -14,13 +10,19 @@ def getLinks(query):
 import requests
 from bs4 import BeautifulSoup
 
-links = getLinks("Explain GSM architecture mcc bsc msc ques10")
-for link in links:
-    URL = link
-    result = requests.get(URL)
+def getAnswer(question):
+    links = getLinks(question + "ques10")
+    for link in links:
+        URL = link
+        result = requests.get(URL)
 
-    soup = BeautifulSoup(result.content, 'html5lib')
-    div = soup.find("span", itemprop="text")
+        soup = BeautifulSoup(result.content, 'html5lib')
+        #div = soup.find_all(['div.content span.clear-fix p', 'div.content span.clear-fix li'])
+        div = soup.find_all("span", {"class": "clearfix"})
 
-    print(answer)
-    #print(soup.prettify())
+        for para in div:
+            answer = ''.join(para.text)
+
+        return answer    
+#     print(answer)
+# getAnswer("Explain Microprocessor")

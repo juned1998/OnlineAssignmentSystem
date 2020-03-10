@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.core import serializers
 from assignment.utils import render_to_pdf
+from evaluation import eval
 # Create your views here.
 def index(request):
     years  = StudyYear.objects.all()
@@ -387,6 +388,21 @@ def generateQB(request):
         courses  = Course.objects.filter(faculty=faculty)
         return render(request,"Faculty_Dashboard/question_bank.html",{'question_list':questions,'courses': courses})
 
+def generateModelAnswer(request, id):
+    question = Question.objects.get(id=id)
+    modelAnswer = eval.getAnswer(question.title)
+    question.modelAnswer = modelAnswer
+    question.save()
+    return render(request, 'Faculty_Dashboard/modelAnswer.html', {'question': question, 'modelAnswer':modelAnswer, 'id':question.id })
+
+def modelAnswer(request, id):
+    question = Question.objects.get(id=id)
+    if(question.modelAnswer):
+        modelAnswer = question.modelAnswer
+        return render(request, 'Faculty_Dashboard/modelAnswer.html', {'question': question, 'modelAnswer':modelAnswer, 'id':question.id })
+    else:
+        modelAnswer = "Model answer not generated"
+        return render(request, 'Faculty_Dashboard/modelAnswer.html', {'question': question, 'modelAnswer':modelAnswer, 'id':question.id })
 
 ############# Student Dashboard ######################################################################################################################
 @login_required
