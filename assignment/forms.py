@@ -6,25 +6,7 @@ from django.contrib.auth.models import User
 from bootstrap_modal_forms.forms import BSModalForm
 
 
-# class UserRegisterForm(UserCreationForm):
-#     email = forms.EmailField()
-#
-#     class Meta:
-#         model = User
-#         fields = ['username', 'email', 'password1', 'password2']
-#
-# class StudentRegisterForm(forms.ModelForm):
-#     branch = ModelChoiceField(queryset=Branch.objects.all())
-#     year = ModelChoiceField(queryset=StudyYear.objects.all())
-#     class Meta:
-#         model = Student
-#         fields = ['rollnumber', 'branch', 'year']
-#
-# class FacultyRegisterForm(forms.ModelForm):
-#     branch = ModelChoiceField(queryset=Branch.objects.all())
-#     class Meta:
-#         model = Faculty
-#         fields = ['code', 'branch']
+
 
 class ExtendedUserCreationForm(UserCreationForm):
     email = forms.EmailField(required = True)
@@ -77,6 +59,10 @@ class CreateAssignmentForm(forms.ModelForm):
 class AddAssignmentQuestionForm(forms.ModelForm):
     class Meta:
         model = Question
+        widgets = {
+            'modelAnswer': forms.Textarea(
+                attrs={'placeholder': 'Not mandatory. You can use generate button from questions list section.'}),
+        }
         exclude = ['username','date','assignment']
 
 class AddAssignmentAnswerForm(forms.ModelForm):
