@@ -47,13 +47,11 @@
   <thead class="thead-light">
     <td scope="col">Question</td>
     <td scope="col">Assigment</td>
-    <td scope="col">Edit</td>
   </thead>
   {% for question in question_list %}
   <tr>
-    <td contenteditable="false">{{question.title}}</td>
-    <td contenteditable="false">{{question.assignment}}</td>
-    <!-- <td><button class="edit">Edit</button></td> -->
+    <td>{{question.title}}</td>
+    <td>{{question.assignment}}</td>
   </tr>
   {% endfor %}
 </table>
@@ -109,26 +107,6 @@ return;
 });
 
 
-
-    // $(document).ready(function () {
-    //     $('.edit').click(function () {
-    //         var currentTD = $(this).parents('tr').find('td');
-    //         if ($(this).html() == 'Edit') {
-    //             currentTD = $(this).parents('tr').find('td');
-    //             $.each(currentTD, function () {
-    //                 $(this).prop('contenteditable', true)
-    //             });
-    //         } else {
-    //            $.each(currentTD, function () {
-    //                 $(this).prop('contenteditable', false)
-    //             });
-    //         }
-    //
-    //         $(this).html($(this).html() == 'Edit' ? 'Save' : 'Edit')
-    //
-    //     });
-    //
-    // });
 
 
 
