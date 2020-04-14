@@ -17,14 +17,20 @@ def index(request):
 
 def filter(request):
     if(request.method=="GET"):
-        branch = request.GET['branchfilter']
-        year = request.GET['yearfilter']
+        courses = Course.objects.all()
         course = request.GET['coursefilter']
 
-        course = Course.objects.filter(name=course,branch=branch,year=year)
-        assignemnt=Assignemnt.objects.filter(course=course)
-        questions=Question.objects.filter(assignment=assignemnt)
-        return render(request,"index.html",{'question_list':questions})
+        course = Course.objects.get(name=course)
+        assignments=Assignment.objects.filter(course=course)
+        if assignments:
+            questions = Question.objects.filter(assignment=assignments[0])
+            for assignment in assignments:
+                questions = questions | Question.objects.filter(assignment = assignment)
+            return render(request,"index.html",{'question_list':questions , 'courses':courses})
+        else:
+            questions = Question.objects.all()
+            return render(request,"index.html",{'question_list':questions , 'courses':courses})
+
 
 
 
@@ -339,7 +345,7 @@ def modelAnswer(request, id):
         modelAnswer = question.modelAnswer
         return render(request, 'Faculty_Dashboard/modelAnswer.html', {'question': question, 'modelAnswer':modelAnswer, 'id':question.id })
     else:
-        modelAnswer = "Model answer not generated. Click on Generate Model Answer"
+        modelAnswer = "Model answer not generated. Click on Generate Model Answer, it might take upto 5-10 seconds depending upon response from source site. Please don't repeatedly click generate button to avoid getting blocked by source site."
         return render(request, 'Faculty_Dashboard/modelAnswer.html', {'question': question, 'modelAnswer':modelAnswer, 'id':question.id })
 
 ############# Student Dashboard ######################################################################################################################

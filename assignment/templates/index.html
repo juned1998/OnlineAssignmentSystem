@@ -5,34 +5,10 @@
 
 <div class="col-md-4">
 
-
-   <div class="mx-4 my-3 category  ">
-      <!-- <h5 class="align-top">Filter Question</h5> -->
-      <!-- <form id="filterForm" method="GET" action="{%url 'FilterQuestions' %}">
+   <div class="mx-4 my-3 category ">
+      <h5 class="align-top">Filter Question</h5>
+      <form id="filterForm" method="GET" action="{%url 'FilterQuestions' %}">
         <div class="form-group">
-
-          <select name="yearfilter" class="form-control" id="filterYear">
-            <option value="">Select Year</option>
-            {% for year in years %}
-
-            <option value="{{year}}">{{year}}</option>
-
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="form-group">
-
-          <select name="branchfilter" class="form-control" id="filterBranch">
-            <option value="">Select Branch</option>
-            {% for branch in  branchs %}
-            <option value="{{branch}}">{{branch}}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="form-group">
-
           <select name="coursefilter" class="form-control" id="courseField">
             <option value="">Select Course</option>
             {% for course in  courses %}
@@ -42,7 +18,7 @@
         </div>
         <input class="btn btn-info" type="submit" value="submit">
 
-      </form>  -->
+      </form>
     </div>
 
 </div>

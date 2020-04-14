@@ -29,6 +29,7 @@ def getAnswer(question):
 #     print(answer)
 # getAnswer("Explain Microprocessor")
 
+
 def checkSimilairty(userAnswer,modelAnswer):
     X =userAnswer
     Y =modelAnswer

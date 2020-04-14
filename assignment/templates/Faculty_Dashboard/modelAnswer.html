@@ -11,5 +11,11 @@
   {{modelAnswer}}
 </textarea>
 <br>
-<a onclick="return alert('fetching answer...');"  class="btn btn-primary" href="{% url 'generateModelAnswer' id %}">Generate Model Answer</a>
+<a class="btn btn-primary" href="{% url 'generateModelAnswer' id %}">Generate Model Answer</a>
+
+<div class="">
+  <h5>If you experience error 500, please add the model answer manually. Sometimes this module do not work due to network communication error or
+  probably because source website is not allowing web-scraping.</h5>
+</div>
+
 {% endblock %}
