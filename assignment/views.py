@@ -114,68 +114,7 @@ class RepoQuestionDetailView(generic.DetailView):
 def login(request):
     return render(request , 'login.html')
 
-# def StudentRegister(request):
-#     if request.method == 'POST':
-#         form = UserRegisterForm(request.POST)
-#         s_reg_form = StudentRegisterForm(request.POST)
-#     if form.is_valid() and s_reg_form.is_valid():
-#         user = form.save()
-#         user.refresh_from_db()  # load the profile instance created by the signal
-#         s_reg_form = StudentRegisterForm(request.POST, instance=user.profile)
-#         s_reg_form.full_clean()
-#         s_reg_form.save()
-#         messages.success(request, f'Your account has been sent for approval!')
-#         return redirect('login')
-#     else:
-#         form = UserRegisterForm()
-#         s_reg_form = StudentRegisterForm()
-#         context = {
-#             'form': form,
-#             's_reg_form': s_reg_form
-#         }
-#     return render(request, 'StudentRegister.html', context)
-#
-# def FacultyRegister(request):
-#     if request.method == 'POST':
-#         form = UserRegisterForm(request.POST)
-#         f_reg_form = FacultyRegisterForm(request.POST)
-#     else:
-#         form = 'dummyString'
-#     if form.is_valid() and f_reg_form.is_valid():
-#         user = form.save()
-#         user.refresh_from_db()  # load the profile instance created by the signal
-#         f_reg_form = FacultyRegisterForm(request.POST, instance=user.profile)
-#         f_reg_form.full_clean()
-#         f_reg_form.save()
-#         messages.success(request, f'Your account has been sent for approval!')
-#         return redirect('login')
-#     else:
-#         form = UserRegisterForm()
-#         s_reg_form = StudentRegisterForm()
-#         context = {
-#             'form': form,
-#             's_reg_form': s_reg_form
-#         }
-#     return render(request, 'StudentRegister.html', context)
 
-# def StudentSignUpForm(request):
-#     if request.method == 'POST':
-#         form = ExtendedUserCreationForm(request.POST)
-#         student_form = StudentSignUpForm(request.POST)
-#
-#         if form.is_valid() and student_form.is_valid():
-#             user = form.save()
-#             student = student_form.save(commit=False)
-#             student.save()
-#             username = form.cleaned_data.get('username')
-#             password = form.cleaned_data.get('password')
-#             user = authenticate(username = username , password = password)
-#             login(request,user)
-#             return redirect('index')
-#     else:
-#         form = ExtendedUserCreationForm(request.POST)
-#         student_form = StudentSignUpForm(request.POST)
-#     context = {'form': form , 'student_form':student_form}
 
 def registerView(request):
     return render(request , 'registration/register.html')
@@ -400,7 +339,7 @@ def modelAnswer(request, id):
         modelAnswer = question.modelAnswer
         return render(request, 'Faculty_Dashboard/modelAnswer.html', {'question': question, 'modelAnswer':modelAnswer, 'id':question.id })
     else:
-        modelAnswer = "Model answer not generated"
+        modelAnswer = "Model answer not generated. Click on Generate Model Answer"
         return render(request, 'Faculty_Dashboard/modelAnswer.html', {'question': question, 'modelAnswer':modelAnswer, 'id':question.id })
 
 ############# Student Dashboard ######################################################################################################################
