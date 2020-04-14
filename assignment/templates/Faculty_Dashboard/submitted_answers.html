@@ -20,6 +20,7 @@
           <th scope="col">Name</th>
           <th scope="col">Date</th>
           <th scope="col">Answer</th>
+          <th scope="col">Similarity</th>
           <th scope="col">Action</th>
         </tr>
       </thead>
@@ -30,6 +31,7 @@
           <td>{{ answer.username.first_name}} {{ answer.username.last_name}}</td>
           <td>{{ answer.date}}</td>
           <td>{{answer.answer_txt}}</td>
+          <td>{{answer.similarity}}</td>
           <td><a class="btn btn-warning" href="{% url 'RejectAnswer' qid=question.id  ansID=answer.id  %}">Reject</a></td>
 
         </tr>

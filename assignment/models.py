@@ -94,6 +94,7 @@ class Answer(models.Model):
     status = models.CharField(max_length=12,choices=STATUS,default='Draft')
     username = models.ForeignKey(User,on_delete = models.SET_NULL,null=True)
     upvotes = models.ManyToManyField(User , related_name = 'Upvotes' , blank=True)
+    similarity = models.FloatField(null=True)
 
     def __str__(self):
         return f'{self.question.title} by {self.username.first_name}'

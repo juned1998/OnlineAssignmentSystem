@@ -82,4 +82,4 @@ class AddAssignmentQuestionForm(forms.ModelForm):
 class AddAssignmentAnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
-        exclude = ['username','assignment','question','upvotes']
+        exclude = ['username','assignment','question','upvotes','similarity']

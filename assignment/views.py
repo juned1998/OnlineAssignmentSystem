@@ -8,7 +8,6 @@ from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.db.models import Count
 from django.core import serializers
-from assignment.utils import render_to_pdf
 from evaluation import eval
 # Create your views here.
 def index(request):
@@ -457,6 +456,8 @@ def AnswerCreate(request, pk):
             userAnswer, created = Answer.objects.get_or_create(username=request.user, question = question )
             userAnswer.answer_txt = answer
             userAnswer.status = status
+            if(question.modelAnswer):
+                userAnswer.similarity = eval.checkSimilairty(userAnswer.answer_txt,question.modelAnswer)
             userAnswer.save()
             return redirect('student_assignment_detail', question.assignment.id)
     elif user_answer:
