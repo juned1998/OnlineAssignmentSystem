@@ -8,7 +8,7 @@
 
    <div class="mx-4 my-3 category  ">
       <h5 class="align-top">Filter Question</h5>
-      <form div="filterForm" method="GET" action="{%url 'FilterQuestions' %}">
+      <!-- <form id="filterForm" method="GET" action="{%url 'FilterQuestions' %}">
         <div class="form-group">
 
           <select name="yearfilter" class="form-control" id="filterYear">
@@ -41,15 +41,10 @@
           </select>
         </div>
         <input class="btn btn-info" type="submit" value="submit">
-        <!-- <a class="btn btn-info" href="#" type="submit" >Filter</a> -->
-      </form>
+      
+      </form>  -->
     </div>
-    <!-- <div class="Qbox col-md-6 mx-3 my-3">
-      <form>
-      <textarea name="name" rows="1" cols="60" style = "resize : none;  padding:1px;" placeholder="Ask Question.." ></textarea>
-      <button type="button" class="btn btn-primary searchButton" >Search</button>
-      </form>
-    </div> -->
+
 </div>
 <div class="col-md-8">
   {% if question_list %}
@@ -87,6 +82,10 @@
      });
 
    });
+
+
+
+
 </script>
 
 {% endblock %}
