@@ -1,1 +1,3 @@
 punkt
+corpus
+tokenize
